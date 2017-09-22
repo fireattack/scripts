@@ -11,7 +11,6 @@
 // @match        *://konachan.com/post?*
 // @grant        GM_xmlhttpRequest
 // @run-at       document-end
-// @downloadURL  https://raw.githubusercontent.com/BrokenEagle/JavaScripts/stable/iqdbbooru.user.js
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js
 // @connect      donmai.us
 // ==/UserScript==
