@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name        Hightlight posts with artist tag
+// @name        Yande.re hightlight posts with artist tag
 // @namespace   org.fireattack.yandere
 // @match       *://yande.re/post
 // @match       *://yande.re/post?*
-// @version     0.0.4
+// @version     0.0.5
 // ==/UserScript==
 
 function artistCheck() {
