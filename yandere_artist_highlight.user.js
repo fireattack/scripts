@@ -3,7 +3,7 @@
 // @namespace   org.fireattack.yandere
 // @match       *://yande.re/post
 // @match       *://yande.re/post?*
-// @version     0.0.2
+// @version     0.0.3
 // ==/UserScript==
 
 function artistCheck() {
@@ -27,7 +27,11 @@ function artistCheck() {
 }
 
 
-document.querySelector("#tag-sidebar").previousElementSibling.innerHTML += '<br><a style="color:#cccc00" href="#" id="artist-check">&lt;Check artist&gt;</a>';
-document.getElementById('artist-check').onclick = function(e) {
-    artistCheck();
-};
+var sidebar = document.querySelector("#tag-sidebar").previousElementSibling;
+var node = document.createElement("a");
+node.href = "#";
+node.id = "artist-check";
+node.style="color:#cccc00";
+node.appendChild(document.createTextNode('<Check artist>'));
+sidebar.appendChild(document.createElement('br'));
+sidebar.appendChild(node);
