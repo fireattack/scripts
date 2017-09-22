@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         IQDB Booru
+// @name         Search artist from danbooru
 // @namespace    https://github.com/BrokenEagle/JavaScripts
-// @version      6
+// @version      0.01
 // @source       https://danbooru.donmai.us/users/23799
-// @description  Danbooru IQDB checker for various Booru sites.
-// @author       BrokenEagle
+// @description  Search artist tag from danbooru. For Yande.re tag usage.
+// @author       BrokenEagle, fireattack
 // @match        *://gelbooru.com/index.php?page=post&s=list*
 // @match        *://chan.sankakucomplex.com/?*
 // @match        *://yande.re/post?*
@@ -206,26 +206,22 @@ async function checkThumbs() {
         const resp = _$.getJSON('https://danbooru.donmai.us/iqdb_queries.json',{'url':$filethumbs[j].src},data=>{
             console.log("Data:",data.length);
             if (data.length > 0) {
-                //Place a list of post(s) underneath the image
-                let postlist = [];
-                for (let i=0;i<data.length;i++) {
-                    let postid = data[i].post.id;
-                    postlist.push(`<a href="http://danbooru.donmai.us/posts/${postid}" target="_blank" class="danbooru-post">post #${postid}</a>`);
-                }
-                if (checkThumbs.maxPosts < data.length) {
-                    let newheight = site_config[window.location.host].startHeight + (15 * data.length);
-                    _$(site_config[window.location.host].outerContainer).css('height',`${newheight}px`);
-                    console.log("New height:",newheight);
-                    checkThumbs.maxPosts = data.length;
-                }
-                let $outercontainer = getNthParent($filethumbs[j],site_config[window.location.host].thumbContainerDiff);
-                let poststring = postlist.join('<br>');
-                $outercontainer.innerHTML += `<span style="position:absolute;top:${site_config[window.location.host].postTop}px;left:30px;white-space:nowrap">${poststring}</span>`;
-                $outercontainer.style.position = 'relative';
+                    if (data[0].post.tag_string_artist !== ""){
+                        let tag_string_artist = data[0].post.tag_string_artist;
+                        let postid = data[0].post.id;
+                        postlist =`<a href="http://danbooru.donmai.us/posts/${postid}" target="_blank" class="danbooru-post">#${postid}</a><br><a href="http://danbooru.donmai.us/artists/show_or_new?name=${tag_string_artist}" target="_blank" class="danbooru-post">artist: ${tag_string_artist}</a>`;
+                        let newheight = site_config[window.location.host].startHeight + 30;
+                        _$(site_config[window.location.host].outerContainer).css('height',`${newheight}px`);
+                        console.log("New height:",newheight);
+
+                        let $outercontainer = getNthParent($filethumbs[j],site_config[window.location.host].thumbContainerDiff);
+                        $outercontainer.innerHTML += `<span style="position:absolute;top:${site_config[window.location.host].postTop}px;left:30px;white-space:nowrap">${postlist}</span>`;
+                        $outercontainer.style.position = 'relative';
+                    }
             } else {
                 //Add a red "border" to the image
-                $outercontainer = getNthParent($filethumbs[j],site_config[window.location.host].thumbBorderDiff);
-                $outercontainer.style['box-shadow'] = "0px 0px 0px 10px #f00";
+               // $outercontainer = getNthParent($filethumbs[j],site_config[window.location.host].thumbBorderDiff);
+               // $outercontainer.style['box-shadow'] = "0px 0px 0px 10px #f00";
             }
         }).always(()=>{
             console.log("Status:",resp.status,resp.statusText);
@@ -233,7 +229,6 @@ async function checkThumbs() {
         });
     }
 }
-checkThumbs.maxPosts = 0;
 checkThumbs.async_requests = 0;
 
 function IQDBCheck() {
