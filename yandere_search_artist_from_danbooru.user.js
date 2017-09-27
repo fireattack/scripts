@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Search artist from danbooru
+// @name         Yande.re search artist from danbooru
 // @namespace    https://github.com/BrokenEagle/JavaScripts
-// @version      0.01
+// @version      0.5
 // @source       https://danbooru.donmai.us/users/23799
 // @description  Search artist tag from danbooru. For Yande.re tag usage.
 // @author       BrokenEagle, fireattack
@@ -209,18 +209,18 @@ async function checkThumbs() {
                         let tag_string_artist = data[0].post.tag_string_artist;
                         let postid = data[0].post.id;
                         postlist =`<a href="http://danbooru.donmai.us/posts/${postid}" target="_blank" class="danbooru-post">#${postid}</a><br><a href="http://danbooru.donmai.us/artists/show_or_new?name=${tag_string_artist}" target="_blank" class="danbooru-post">artist: ${tag_string_artist}</a>`;
-                        let newheight = site_config[window.location.host].startHeight + 30;
+                        let oldheight = _$('#post-list-posts li')[0].offsetHeight;
+                        let newheight = oldheight + 30;
                         _$(site_config[window.location.host].outerContainer).css('height',`${newheight}px`);
                         console.log("New height:",newheight);
 
                         let $outercontainer = getNthParent($filethumbs[j],site_config[window.location.host].thumbContainerDiff);
-                        $outercontainer.innerHTML += `<span style="position:absolute;top:${site_config[window.location.host].postTop}px;left:30px;white-space:nowrap">${postlist}</span>`;
+                        var node = document.createElement("span");
+                        node.style="position:absolute;left:30px;right:30px";
+                        node.innerHTML = postlist;
+                        $outercontainer.appendChild(node);
                         $outercontainer.style.position = 'relative';
                     }
-            } else {
-                //Add a red "border" to the image
-               // $outercontainer = getNthParent($filethumbs[j],site_config[window.location.host].thumbBorderDiff);
-               // $outercontainer.style['box-shadow'] = "0px 0px 0px 10px #f00";
             }
         }).always(()=>{
             console.log("Status:",resp.status,resp.statusText);
