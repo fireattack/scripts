@@ -1,19 +1,18 @@
 // ==UserScript==
 // @name          Yande.re replace index link to PNG
 // @namespace     org.fireattack.yandere
-// @description   Change jpeg->png in index pages
+// @description   Change link form jpeg->png for index page star bar (under thumbs)
 // @match         *://yande.re/post
 // @match         *://yande.re/post?*
-// @version       0.0.1
+// @version       0.0.2
 // ==/UserScript==
 
-var allLinks, thisLink;
-allLinks = document.evaluate( '//a[@href]', document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-for (var i = 0; i < allLinks.snapshotLength; i++)
-{ thisLink = allLinks.snapshotItem(i);
-if ((thisLink.href).match(/.*re\/jpeg.*/i)){
-thisLink.href = (thisLink.href).replace(/jpeg/, 'image');
-thisLink.href = (thisLink.href).replace(/\.jpg/, '\.png');
-}
+var allLinks = document.querySelectorAll('a');
+    for (let myLink of allLinks) {
+        
+        if (myLink.href.match(/.*re\/jpeg.*/i)) {
+            myLink.href = myLink.href.replace(/jpeg/, 'image');
+            myLink.href = myLink.href.replace(/\.jpg/, '\.png')
+        }
+    }
 
-}
