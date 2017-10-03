@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Yande.re replace index link to PNG
 // @namespace     org.fireattack.yandere
-// @description   Change link form jpeg->png for index page star bar (under thumbs)
+// @description   Change link from jpeg->png for index page star bar (under thumbs)
 // @match         *://yande.re/post
 // @match         *://yande.re/post?*
 // @version       0.0.2
