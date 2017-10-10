@@ -123,5 +123,5 @@ insertPoint.appendChild(document.createTextNode(' '));
 insertPoint.appendChild(loadmoreBtn);
 
 processFilterAll();
-console.log(shownColNum);
+console.log(`Currently showing: ${shownColNum} columns`);
 fetchPage();
