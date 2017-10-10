@@ -2,7 +2,7 @@
 // @name        Yande.re advanced history
 // @namespace   org.fireattack.yandere
 // @match       *://yande.re/history
-// @version     2.0
+// @version     2.1
 // ==/UserScript==
 
 var tbody = document.querySelector("table#history tbody");
@@ -56,8 +56,8 @@ function processFilter(myTr) {
     var filterRules = filterText.value.split(/\r?\n/g);
     for (let myRule of filterRules){
         if (myRule.toLowerCase().startsWith('user')){
-            let author = myRule.match(/^user:(.+)$/i)[1];
-            if (myTr.querySelector('td.author').textContent === author) {
+            let author = myRule.match(/^user:(.+)$/i)[1].toLowerCase();
+            if (myTr.querySelector('td.author').textContent.toLowerCase() === author) {
             myTr.style.display = 'none';
             return true;
             }
