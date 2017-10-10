@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name          Yande.re addtional functionality
+// @name          Yande.re additional functionality
 // @namespace     org.fireattack.yandere
 // @description   
 // @match         *://yande.re/*
-// @version       1.0
+// @version       1.1
 // ==/UserScript==
 
 function getCookie(name) {
