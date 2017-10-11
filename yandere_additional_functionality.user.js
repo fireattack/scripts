@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       1.1
+// @version       1.2
 // ==/UserScript==
 
 function getCookie(name) {
