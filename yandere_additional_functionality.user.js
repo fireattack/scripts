@@ -13,7 +13,7 @@ function getCookie(name) {
 }
 
 function reloadPage() {
-	window.location.reload;
+	window.location.reload();
 }
 
 Object.size = function(obj) {
