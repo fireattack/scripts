@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       1.2
+// @version       1.3
 // ==/UserScript==
 
 function getCookie(name) {
@@ -53,7 +53,6 @@ function batchTransferTagsToParent() {
             promises.push(promise);
         }
     }
-
     jQuery.when.apply(jQuery, promises).done(function(){
         Post.update_batch(toBeUpdated);
         });
@@ -81,7 +80,6 @@ if (/post\/show/i.test(window.location.href)){
 		}
 	}
 }
-
 
 
 function batchTransferPoolshipToParent(){
