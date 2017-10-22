@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       1.5
+// @version       1.6
 // ==/UserScript==
 
 function getCookie(name) {
@@ -26,7 +26,7 @@ function transferTagsPrepare(sourceID, targetID, oldTagsToBeRemoved) {
             },
             dataType: "json",
         })
-        .done(function(resp) {        
+        .done(function(resp) {
             var tags = resp[0].rating + " " + resp[0].tags;
             tags = tags.replace('duplicate', ''); // do not transfer "duplicate"
             tags = tags.replace('fixme', '');
@@ -53,6 +53,21 @@ function batchTransferTagsToParent() {
     });
 }
 
+function batchTransferPoolshipToParent() {
+
+    var toBeUpdated = [];
+
+    for (var id in Post.posts._object){
+        var post = Post.posts._object[id];
+        if (post.parent_id && post.pool_posts && Object.keys(post.pool_posts._object).length===1) {
+            var poolID = Object.keys(post.pool_posts._object)[0];
+            toBeUpdated.push({id: id, tags: "-pool:" + poolID, old_tags: ""});
+            toBeUpdated.push({id: post.parent_id, tags: "pool:" + poolID + ":" + post.pool_posts._object[poolID].sequence, old_tags: ""});
+        }
+    }
+    Post.update_batch(toBeUpdated);
+}
+
 if (/post\/show/i.test(window.location.href)) {
     var id = window.location.href.match(/\d+/)[0];
     var statusNotice = document.querySelectorAll('.status-notice');
@@ -75,19 +90,32 @@ if (/post\/show/i.test(window.location.href)) {
     }
 }
 
+if (/pool\/update/i.test(window.location.href)) {
+    let newButton = document.createElement('input');
+    newButton.type = 'button';
+    newButton.value = 'Fix name';
+    newButton.style.verticalAlign = 'middle';
+    newButton.onclick = () => {
+        var poolName = document.querySelector('#pool_name');
+        var myMatch = poolName.value.match(/\[(.+)\] *(.+?)( \(.+\))*$/);
 
-function batchTransferPoolshipToParent() {
-
-    var toBeUpdated = [];
-
-    for (var id in Post.posts._object){
-        var post = Post.posts._object[id];
-        if (post.parent_id && post.pool_posts && Object.keys(post.pool_posts._object).length===1) {
-            var poolID = Object.keys(post.pool_posts._object)[0];
-            toBeUpdated.push({id: id, tags: "-pool:" + poolID, old_tags: ""});
-            toBeUpdated.push({id: post.parent_id, tags: "pool:" + poolID + ":" + post.pool_posts._object[poolID].sequence, old_tags: ""});
+        if (myMatch) {
+            var desc = document.querySelector('#pool_description');
+            //desc.value = poolName.value + '\n' + desc.value;
+            if (!desc.value) {
+                desc.value = poolName.value;
+            }
+            poolName.value = myMatch[1]+' - '+myMatch[2];
         }
-    }
-    Post.update_batch(toBeUpdated);
-}
 
+        document.querySelector('#pool_is_public').checked = false;
+        document.querySelector('#pool_is_active').checked = false;
+    };
+    let myContent = document.querySelector('div#content');
+    let myH3 = document.querySelector('h3');
+    myH3.style.display = 'inline';
+    myH3.style.verticalAlign= 'middle';
+    let myForm = myContent.querySelector('form');
+    myContent.insertBefore(document.createTextNode('　'),myForm);
+    myContent.insertBefore(newButton, myForm);
+}
