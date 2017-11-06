@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       1.6
+// @version       1.7
 // ==/UserScript==
 
 function getCookie(name) {
@@ -33,7 +33,7 @@ function transferTagsPrepare(sourceID, targetID, oldTagsToBeRemoved) {
             if (!oldTagsToBeRemoved){
                 oldTagsToBeRemoved = "";
             }
-            var toBeUpdated = [{id: targetID, tags: tags, old_tags: oldTagsToBeRemoved}];
+            var toBeUpdated = {id: targetID, tags: tags, old_tags: oldTagsToBeRemoved};
             deferred.resolve(toBeUpdated);
         });
     return deferred.promise();
@@ -79,8 +79,8 @@ if (/post\/show/i.test(window.location.href)) {
                 node.href = '#';
                 node.textContent = '[Transfer tags]';
                 node.onclick= function(){
-                    transferTagsPrepare(childID, id, 'possible_duplicate').done(function(data){ //Also remove possible_duplicate
-                        Post.update_batch(data, reloadPage);
+                    transferTagsPrepare(childID, id, 'possible_duplicate').done(function(data){  //Also remove possible_duplicate                        
+                        Post.update_batch([data], reloadPage);
                     });
                     };
                 notice.appendChild(node);
@@ -88,6 +88,35 @@ if (/post\/show/i.test(window.location.href)) {
             }
         }
     }
+}
+
+if (/pool\/show/i.test(window.location.href)) {
+    let newButton = document.createElement('input');
+    newButton.type = 'button';
+    newButton.value = 'Transfer tags to parent';
+    newButton.style.verticalAlign = 'middle';
+    newButton.onclick = () => {
+        batchTransferTagsToParent();
+    }
+    
+    let newButton2 = document.createElement('input');
+    newButton2.type = 'button';
+    newButton2.value = 'Transfer poolship to parent';
+    newButton2.style.verticalAlign = 'middle';
+    newButton2.onclick = () => {
+        batchTransferPoolshipToParent();
+    }
+    
+    let myH4 = document.querySelector('h4');
+    myH4.style.display = 'inline';
+    myH4.style.verticalAlign= 'middle';
+    let insertPoint = document.querySelector('#pool-show');
+    let insertBefore = insertPoint.childElements()[1];
+    insertPoint.insertBefore(document.createTextNode('　'),insertBefore);
+    insertPoint.insertBefore(newButton,insertBefore);
+    insertPoint.insertBefore(document.createTextNode('　'),insertBefore);
+    insertPoint.insertBefore(newButton2,insertBefore);  
+    
 }
 
 if (/pool\/update/i.test(window.location.href)) {
@@ -111,11 +140,11 @@ if (/pool\/update/i.test(window.location.href)) {
         document.querySelector('#pool_is_public').checked = false;
         document.querySelector('#pool_is_active').checked = false;
     };
-    let myContent = document.querySelector('div#content');
+    let insertPoint = document.querySelector('div#content');
     let myH3 = document.querySelector('h3');
     myH3.style.display = 'inline';
     myH3.style.verticalAlign= 'middle';
-    let myForm = myContent.querySelector('form');
-    myContent.insertBefore(document.createTextNode('　'),myForm);
-    myContent.insertBefore(newButton, myForm);
+    let insertBefore = insertPoint.querySelector('form');
+    insertPoint.insertBefore(document.createTextNode('　'),insertBefore);
+    insertPoint.insertBefore(newButton, insertBefore);
 }
