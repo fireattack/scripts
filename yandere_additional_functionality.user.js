@@ -148,3 +148,21 @@ if (/pool\/update/i.test(window.location.href)) {
     insertPoint.insertBefore(document.createTextNode('　'),insertBefore);
     insertPoint.insertBefore(newButton, insertBefore);
 }
+
+if (/post$|post\?|post\/$/i.test(window.location.href)) {
+    var allLinks = document.querySelectorAll('a');
+    for (let myLink of allLinks) {
+        
+        if (myLink.href.match(/.*re\/jpeg.*/i)) {
+            myLink.href = myLink.href.replace(/jpeg/, 'image');
+            myLink.href = myLink.href.replace(/\.jpg/, '\.png')
+        }
+    }
+}
+
+if (/user\/show/i.test(window.location.href)) {
+    let node1 = document.querySelector("a[href*='/post?tags=user']");
+    let node2 = document.querySelector("a[href*='deleted_index']");
+    let myHTML = " (<a href="+node1.href+"+deleted:true>index show</a>)";
+    node2.parentNode.innerHTML+=myHTML;
+}
