@@ -2,7 +2,7 @@
 // @name         Pixiv quick fav
 // @namespace    https://twitter.com/ikenaikoto
 // @version      0.1
-// @description  try to take over the world!
+// @description  One-click fav on Pixiv
 // @author       fireattack
 // @match        *://www.pixiv.net/member_illust.php?mode=medium&illust_id=*
 // ==/UserScript==
