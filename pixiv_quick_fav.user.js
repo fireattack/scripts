@@ -1,10 +1,12 @@
 // ==UserScript==
-// @name         Pixiv quick fav
-// @namespace    https://twitter.com/ikenaikoto
-// @version      0.2
-// @description  One-click fav on Pixiv
-// @author       fireattack
-// @match        *://www.pixiv.net/member_illust.php?mode=medium&illust_id=*
+// @name              Pixiv quick fav
+// @name:zh-CN        Pixiv 一键收藏
+// @namespace         https://twitter.com/ikenaikoto
+// @version           0.2
+// @description       One-click fav on Pixiv
+// @description:zh-cn Pixiv 一键收藏，避免烦人的页面跳转
+// @author            fireattack
+// @match             *://www.pixiv.net/member_illust.php?mode=medium&illust_id=*
 // ==/UserScript==
 
 function urlencodeFormData(fd) { //From: https://stackoverflow.com/questions/7542586/new-formdata-application-x-www-form-urlencoded
