@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name              Exhentai save reading progress
-// @name:zh-CN        Pixiv 一键收藏
+// @name:zh-CN        Exhentai标记阅读进度
 // @namespace         https://twitter.com/ikenaikoto
 // @version           0.1
 // @description       Exhentai save reading progress
+// @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
 // @match             *://exhentai.org/*
 // ==/UserScript==
