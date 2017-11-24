@@ -14,7 +14,7 @@ function changeStyleOfRead(readId) {
         var nodes = document.querySelectorAll('.id1');
         for (node of nodes)
         {
-            let id = node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1];
+            let id = Number(node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1]);
             if (id<=readId)
                 node.style.backgroundColor = '#574158';            
         }
@@ -31,7 +31,7 @@ function setReadProgress () {
         var nodes = firstPage.querySelectorAll('.id1');
         
         for (node of nodes) {
-            let id = node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1];
+            let id = Number(node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1]);
             if (id>maxId) maxId = id;
         }
         localStorage.setItem('readId', maxId);
@@ -49,5 +49,5 @@ myBtn.textContent = 'Set reading progress!';
 myBtn.onclick = () => { setReadProgress(); };
 myDiv.appendChild(myBtn);
 
-var readId = localStorage.getItem('readId');
+var readId = Number(localStorage.getItem('readId'));
 changeStyleOfRead(readId);
