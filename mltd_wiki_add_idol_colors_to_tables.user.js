@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              MLTD wiki add idol colors for tables
 // @namespace         https://twitter.com/ikenaikoto
-// @version           0.1
+// @version           0.2
 // @description       MLTD wiki add idol colors for tables
 // @author            fireattack
 // @match             *://imasml-theater-wiki.gamerch.com/*
