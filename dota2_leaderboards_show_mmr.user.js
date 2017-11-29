@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dota2 Leaderboards Show MMR
 // @namespace    https://www.reddit.com/user/fireattack/
-// @version      0.1
+// @version      0.2
 // @description  Show MMR on Dota2 Leaderboards MMR
 // @author       Valve, fireattack
 // @match        http://www.dota2.com/leaderboards*
@@ -102,6 +102,8 @@ var LoadDivisionData = function() {
         }
     });
 }
+
+$(unsafeWindow).unbind('hashchange');
 
 $(window).bind('hashchange', function(e) {
     LoadDivisionData();
