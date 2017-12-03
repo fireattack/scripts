@@ -4,9 +4,9 @@
 // @version           0.2
 // @description       Exhentai uploader filter
 // @author            fireattack
-// @match             *://exhentai.org/*           
+// @match             *://exhentai.org/
+// @match             *://exhentai.org/gamecg*
 // @exclude           *://exhentai.org/g/*
-// @exclude           *://exhentai.org/
 // ==/UserScript==
 
 const banList = ['sim22x'];
