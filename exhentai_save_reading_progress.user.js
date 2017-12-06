@@ -2,7 +2,7 @@
 // @name              Exhentai save reading progress
 // @name:zh-CN        Exhentai标记阅读进度
 // @namespace         https://twitter.com/ikenaikoto
-// @version           0.2
+// @version           0.3
 // @description       Exhentai save reading progress
 // @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
