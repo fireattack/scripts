@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       2.0
+// @version       2.1
 // ==/UserScript==
 
 function getCookie(name) {
@@ -148,15 +148,17 @@ if (/pool\/update/i.test(window.location.href)) {
     insertPoint.insertBefore(newButton, insertBefore);
 }
 
+// Post index modification
+
 if (/post$|post\?|post\/$/i.test(window.location.href)) {
 
     // Feature: restore PNG image's direct link URL and resolution display to original, instead of its JPEG version's
     postLis = document.querySelectorAll('ul#post-list-posts > li');
     postLis.forEach(li => {
         var directlink = li.querySelector('a.directlink');
-        if (/.*re\/jpeg.*/i.test(li.querySelector('a.directlink'))) {
-            li.href = li.href.replace(/jpeg/, 'image');
-            li.href = li.href.replace(/\.jpg/, '\.png');
+        if (/.*re\/jpeg.*/i.test(directlink)) {
+            directlink.href = directlink.href.replace(/jpeg/, 'image');
+            directlink.href = directlink.href.replace(/\.jpg/, '\.png');
             var id = li.id.match(/\d+/)[0];
             var width = Post.posts._object[id].width;
             var height = Post.posts._object[id].height;
@@ -164,6 +166,8 @@ if (/post$|post\?|post\/$/i.test(window.location.href)) {
         }
     });
 }
+
+// User page modification
 
 if (/user\/show/i.test(window.location.href)) {
     let node1 = document.querySelector("a[href*='/post?tags=user']");
