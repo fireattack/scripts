@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       1.8
+// @version       1.9
 // ==/UserScript==
 
 function getCookie(name) {
@@ -79,7 +79,7 @@ if (/post\/show/i.test(window.location.href)) {
                 node.href = '#';
                 node.textContent = '[Transfer tags]';
                 node.onclick= function(){
-                    transferTagsPrepare(childID, id, 'possible_duplicate').done(function(data){  //Also remove possible_duplicate                        
+                    transferTagsPrepare(childID, id, 'possible_duplicate').done(function(data){  //Also remove possible_duplicate
                         Post.update_batch([data], reloadPage);
                     });
                     };
@@ -97,16 +97,16 @@ if (/pool\/show/i.test(window.location.href)) {
     newButton.style.verticalAlign = 'middle';
     newButton.onclick = () => {
         batchTransferTagsToParent();
-    }
-    
+    };
+
     let newButton2 = document.createElement('input');
     newButton2.type = 'button';
     newButton2.value = 'Transfer poolship to parent';
     newButton2.style.verticalAlign = 'middle';
     newButton2.onclick = () => {
         batchTransferPoolshipToParent();
-    }
-    
+    };
+
     let myH4 = document.querySelector('h4');
     myH4.style.display = 'inline';
     myH4.style.verticalAlign= 'middle';
@@ -115,8 +115,8 @@ if (/pool\/show/i.test(window.location.href)) {
     insertPoint.insertBefore(document.createTextNode('　'),insertBefore);
     insertPoint.insertBefore(newButton,insertBefore);
     insertPoint.insertBefore(document.createTextNode('　'),insertBefore);
-    insertPoint.insertBefore(newButton2,insertBefore);  
-    
+    insertPoint.insertBefore(newButton2,insertBefore);
+
 }
 
 if (/pool\/update/i.test(window.location.href)) {
@@ -150,14 +150,20 @@ if (/pool\/update/i.test(window.location.href)) {
 }
 
 if (/post$|post\?|post\/$/i.test(window.location.href)) {
-    var allLinks = document.querySelectorAll('a');
-    for (let myLink of allLinks) {
-        
-        if (myLink.href.match(/.*re\/jpeg.*/i)) {
+
+    // Feature: restore PNG image's direct link URL and resolution display to original, instead of its JPEG version's
+    postLis = document.querySelectorAll('ul#post-list-posts > li');
+    postLis.forEach(li => {
+        var directlink = li.querySelector('a.directlink');
+        if (li.querySelector('a.directlink').match(/.*re\/jpeg.*/i)) {
             myLink.href = myLink.href.replace(/jpeg/, 'image');
-            myLink.href = myLink.href.replace(/\.jpg/, '\.png')
+            myLink.href = myLink.href.replace(/\.jpg/, '\.png');
+            var id = li.id.match(/\d+/)[0];
+            var width = Post.posts._object[id].width;
+            var height = Post.posts._object[id].height;
+            directlink.lastChild.textContent = `${width} x ${height}`;
         }
-    }
+    });
 }
 
 if (/user\/show/i.test(window.location.href)) {
