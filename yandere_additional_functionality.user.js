@@ -116,7 +116,6 @@ if (/pool\/show/i.test(window.location.href)) {
     insertPoint.insertBefore(newButton,insertBefore);
     insertPoint.insertBefore(document.createTextNode('　'),insertBefore);
     insertPoint.insertBefore(newButton2,insertBefore);
-
 }
 
 if (/pool\/update/i.test(window.location.href)) {
@@ -155,7 +154,7 @@ if (/post$|post\?|post\/$/i.test(window.location.href)) {
     postLis = document.querySelectorAll('ul#post-list-posts > li');
     postLis.forEach(li => {
         var directlink = li.querySelector('a.directlink');
-        if (li.querySelector('a.directlink').match(/.*re\/jpeg.*/i)) {
+        if (/.*re\/jpeg.*/i.test(li.querySelector('a.directlink'))) {
             li.href = li.href.replace(/jpeg/, 'image');
             li.href = li.href.replace(/\.jpg/, '\.png');
             var id = li.id.match(/\d+/)[0];
