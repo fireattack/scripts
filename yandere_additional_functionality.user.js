@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       1.9
+// @version       2.0
 // ==/UserScript==
 
 function getCookie(name) {
@@ -156,8 +156,8 @@ if (/post$|post\?|post\/$/i.test(window.location.href)) {
     postLis.forEach(li => {
         var directlink = li.querySelector('a.directlink');
         if (li.querySelector('a.directlink').match(/.*re\/jpeg.*/i)) {
-            myLink.href = myLink.href.replace(/jpeg/, 'image');
-            myLink.href = myLink.href.replace(/\.jpg/, '\.png');
+            li.href = li.href.replace(/jpeg/, 'image');
+            li.href = li.href.replace(/\.jpg/, '\.png');
             var id = li.id.match(/\d+/)[0];
             var width = Post.posts._object[id].width;
             var height = Post.posts._object[id].height;
