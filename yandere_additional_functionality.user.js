@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       2.1
+// @version       2.2
 // ==/UserScript==
 
 function getCookie(name) {
@@ -148,9 +148,9 @@ if (/pool\/update/i.test(window.location.href)) {
     insertPoint.insertBefore(newButton, insertBefore);
 }
 
-// Post index modification
+// Post/pool index modification
 
-if (/post$|post\?|post\/$/i.test(window.location.href)) {
+if (/post$|post\?|post\/$|pool\/show/i.test(window.location.href)) {
 
     // Feature: restore PNG image's direct link URL and resolution display to original, instead of its JPEG version's
     postLis = document.querySelectorAll('ul#post-list-posts > li');
