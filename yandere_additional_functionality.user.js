@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       3.0
+// @version       3.1
 // ==/UserScript==
 
 
@@ -25,10 +25,11 @@ if (a) {
 }
 else {
     doNotTransfer = [
-        , 'duplicate'
-        , 'fixme'
+        , 'duplicate'        
+        , 'fixed'
         , 'wallpaper'
         , 'possible_duplicate'
+        , 'duplicate'
     ];
     jQuery
         .ajax({
@@ -74,7 +75,7 @@ function transferTagsPrepare(sourceID, targetID, oldTagsToBeRemoved) {
 }
 
 function batchTransferTags(direction, post_ids) {    
-    if (post_ids === undefined || "all") { // By default, apply to all
+    if (!post_ids) { // By default, apply to all
         post_ids = Object.keys(Post.posts._object);
     }
     var toBeUpdated = [], 
