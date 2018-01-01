@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       2.2
+// @version       2.3
 // ==/UserScript==
 
 function getCookie(name) {
@@ -22,7 +22,7 @@ function transferTagsPrepare(sourceID, targetID, oldTagsToBeRemoved) {
         .ajax({
             url: "/post.json",
             data: {
-                tags: "id:" + sourceID,
+                tags: "id:" + sourceID,                
             },
             dataType: "json",
         })
@@ -52,6 +52,21 @@ function batchTransferTagsToParent() {
         Post.update_batch(toBeUpdated);
     });
 }
+
+function batchTransferTagsFromParent() {
+    var toBeUpdated = [], promises = [];
+    for (var id in Post.posts._object){
+        var post = Post.posts._object[id];
+        if (post.parent_id) {
+            var promise = transferTagsPrepare(post.parent_id, id).done(function(data){toBeUpdated.push(data);});
+            promises.push(promise);
+        }
+    }
+    jQuery.when.apply(jQuery, promises).done(function(){
+        Post.update_batch(toBeUpdated);
+    });
+}
+
 
 function batchTransferPoolshipToParent() {
 
