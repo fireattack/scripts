@@ -2,7 +2,7 @@
 // @name              Exhentai save reading progress
 // @name:zh-CN        Exhentai标记阅读进度
 // @namespace         https://twitter.com/ikenaikoto
-// @version           0.3
+// @version           0.4
 // @description       Exhentai save reading progress
 // @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
@@ -25,8 +25,7 @@ function setReadProgress () {
     xhr.open('GET', 'https://exhentai.org/', true);
     var maxId = 0;
     xhr.onload = () => {
-        var firstPage = document.createElement('html');
-        firstPage.innerHTML = xhr.responseText;
+        var firstPage = xhr.responseXML;
         var nodes = firstPage.querySelectorAll('.id1');
         
         nodes.forEach(node => {
@@ -36,6 +35,7 @@ function setReadProgress () {
         localStorage.setItem('readId', maxId);
         changeStyleOfRead(maxId);
     };
+    xhr.responseType = 'document';
     xhr.send();
 }
 
