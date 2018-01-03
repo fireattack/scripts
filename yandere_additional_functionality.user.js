@@ -25,7 +25,7 @@ if (a) {
 }
 else {
     doNotTransfer = [
-        , 'duplicate'        
+        , 'duplicate'
         , 'fixed'
         , 'wallpaper'
         , 'possible_duplicate'
@@ -60,10 +60,10 @@ function transferTagsPrepare(sourceID, targetID, oldTagsToBeRemoved) {
         .done(function (resp) {
             var tags = resp[0].tags.split(" ");
             tags.push(resp[0].rating);
-            tags = tags.filter( el => !doNotTransfer.includes(el));
+            tags = tags.filter(el => !doNotTransfer.includes(el));
             if (!oldTagsToBeRemoved) {
                 oldTagsToBeRemoved = "";
-            }            
+            }
             var toBeUpdated = {
                 id: targetID,
                 tags: tags.join(" "),
@@ -74,11 +74,11 @@ function transferTagsPrepare(sourceID, targetID, oldTagsToBeRemoved) {
     return deferred.promise();
 }
 
-function batchTransferTags(direction, post_ids) {    
+function batchTransferTags(direction, post_ids) {
     if (!post_ids) { // By default, apply to all
         post_ids = Object.keys(Post.posts._object);
     }
-    var toBeUpdated = [], 
+    var toBeUpdated = [],
         promises = [];
     post_ids.forEach(post_id => {
         var post = Post.posts.get(post_id);
@@ -207,13 +207,20 @@ if (/pool\/show/i.test(window.location.href)) {
     insertPoint.insertBefore(newButton2, insertBefore);
 }
 
+// Pool update (edit) page modification
 if (/pool\/update/i.test(window.location.href)) {
+
+    // Make pool_name textarea longer
+    var poolName = document.querySelector('#pool_name');
+    poolName.style.width = '1500px';
+
+    // Add a button to quickly change pool name from Exhentai style to Yande.re style
     let newButton = document.createElement('input');
     newButton.type = 'button';
     newButton.value = 'Fix name';
     newButton.style.verticalAlign = 'middle';
     newButton.onclick = () => {
-        var poolName = document.querySelector('#pool_name');
+
         var myMatch = poolName.value.match(/\[(.+)\] *(.+?)( \(.+\))*$/);
 
         if (myMatch) {
@@ -238,7 +245,6 @@ if (/pool\/update/i.test(window.location.href)) {
 }
 
 // Post/pool index modification
-
 if (/post$|post\?|post\/$|pool\/show/i.test(window.location.href)) {
 
     // Feature: restore PNG image's direct link URL and resolution display to original, instead of its JPEG version's
