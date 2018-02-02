@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       3.11
+// @version       4.0
 // ==/UserScript==
 
 
@@ -22,15 +22,8 @@ var doNotTransfer;
 var a = localStorage.getItem('doNotTransfer');
 if (a) {
     doNotTransfer = a.split(' ');
-}
-else {
-    doNotTransfer = [
-        , 'duplicate'
-        , 'fixed'
-        , 'wallpaper'
-        , 'possible_duplicate'
-        , 'duplicate'
-    ];
+} else {
+    doNotTransfer = ['duplicate', 'fixed', 'wallpaper', 'possible_duplicate'];
     jQuery
         .ajax({
             url: "/tag.json",
@@ -45,93 +38,103 @@ else {
         });
 }
 
-const oldTagsToBeRemoved = 'possible_duplicate';
+const defaultOldTagsToBeRemoved = ['possible_duplicate'];
 
-function transferTagsPrepare(sourceID, targetID, oldTagsToBeRemoved) {
-    var deferred = jQuery.Deferred();
+function ajaxGetPostObj(id, lookForChild = false) {
+    var deferred = jQuery.Deferred();    
+    let index = (lookForChild)? 1 : 0;
     jQuery
         .ajax({
             url: "/post.json",
             data: {
-                tags: "id:" + sourceID,
+                tags: "parent:" + id
             },
             dataType: "json",
         })
         .done(function (resp) {
-            var tags = resp[0].tags.split(" ");
-            tags.push(resp[0].rating);
-            tags = tags.filter(el => !doNotTransfer.includes(el));
-            if (!oldTagsToBeRemoved) {
-                oldTagsToBeRemoved = "";
-            }
-            var toBeUpdated = {
-                id: targetID,
-                tags: tags.join(" "),
-                old_tags: oldTagsToBeRemoved
-            };
-            deferred.resolve(toBeUpdated);
+            deferred.resolve(resp[index]);
         });
     return deferred.promise();
 }
 
-function batchTransferTags(direction, post_ids) {
+function transferTagsPrepare(postObj, targetID, oldTagsToBeRemoved = defaultOldTagsToBeRemoved) {
+    var tags = postObj.tags.split(" ");
+    tags.push(postObj.rating);
+    tags = tags.filter(el => !doNotTransfer.includes(el));
+    return toBeUpdated = {
+        id: targetID,
+        tags: tags.join(" "),
+        old_tags: oldTagsToBeRemoved.join(" ")
+    };
+}
+
+function batchTransferTags(method, post_ids) {
     if (!post_ids) { // By default, apply to all
         post_ids = Object.keys(Post.posts._object);
     }
-    var toBeUpdated = [],
+    var toBeUpdatedArr = [],
         promises = [];
     post_ids.forEach(post_id => {
         var post = Post.posts.get(post_id);
-        if (post.parent_id) {
-            var from, to;
-            if (direction == "to") {
-                from = post_id;
-                to = post.parent_id;
-            } else {
-                from = post.parent_id;
-                to = post_id;
-            }
-            var promise = transferTagsPrepare(from, to, oldTagsToBeRemoved).done(function (data) {
-                toBeUpdated.push(data);
-            });
-            promises.push(promise);
+        switch (method) {
+            case 'toparent':
+                if (post.parent_id)
+                    toBeUpdatedArr.push(transferTagsPrepare(post, post.parent_id));
+                break;
+            case 'fromparent':
+                if (post.parent_id) {
+                    var promise = ajaxGetPostObj(post.parent_id).done(obj => {
+                        toBeUpdatedArr.push(transferTagsPrepare(obj, post_id));
+                    });
+                    promises.push(promise);
+                }
+                break;
+            case 'fromchild':
+                if (post.has_children) {
+                    var promise = ajaxGetPostObj(post_id, true).done(obj => {
+                        toBeUpdatedArr.push(transferTagsPrepare(obj, post_id));
+                    });                   
+                    promises.push(promise);
+                }
+                break;
         }
     });
-    jQuery.when.apply(jQuery, promises).done(function () {
-        Post.update_batch(toBeUpdated);
+    jQuery.when.apply(jQuery, promises).done(() => {
+        Post.update_batch(toBeUpdatedArr);
     });
 }
 
 function batchTransferPoolshipToParent() {
 
-    var toBeUpdated = [];
+    var toBeUpdatedArr = [];
     for (var id in Post.posts._object) {
         var post = Post.posts._object[id];
         if (post.parent_id && post.pool_posts && Object.keys(post.pool_posts._object).length === 1) {
             var poolID = Object.keys(post.pool_posts._object)[0];
-            toBeUpdated.push({
+            toBeUpdatedArr.push({
                 id: id,
                 tags: "-pool:" + poolID,
                 old_tags: ""
             });
-            toBeUpdated.push({
+            toBeUpdatedArr.push({
                 id: post.parent_id,
                 tags: "pool:" + poolID + ":" + post.pool_posts._object[poolID].sequence,
                 old_tags: ""
             });
         }
     }
-    Post.update_batch(toBeUpdated);
+    Post.update_batch(toBeUpdatedArr);
 }
 
 // 魔改 TagScript.run
 TagScript.run = function (post_ids, tag_script, finished) {
     if (!Object.isArray(post_ids)) post_ids = $A([post_ids]);
 
-    if (tag_script.indexOf("[fromparent]") == 0) {
-        batchTransferTags('from', post_ids);
-    } else if (tag_script.indexOf("[toparent]") == 0) {
-        batchTransferTags('to', post_ids);
+    let re = /\$(\S+)\$/;
+    let match = re.exec(tag_script);
+
+    if (match) {
+        batchTransferTags(match[1], post_ids);
     } else {
 
         var commands = TagScript.parse(tag_script) || [] //预处理tagscript
@@ -158,7 +161,7 @@ TagScript.run = function (post_ids, tag_script, finished) {
 };
 
 if (/post\/show/i.test(window.location.href)) {
-    var id = window.location.href.match(/\d+/)[0];
+    var post_id = window.location.href.match(/\d+/)[0];
     var statusNotice = document.querySelectorAll('.status-notice');
     if (statusNotice) {
         for (let notice of statusNotice) {
@@ -168,8 +171,8 @@ if (/post\/show/i.test(window.location.href)) {
                 node.href = '#';
                 node.textContent = '[Transfer tags]';
                 node.onclick = function () {
-                    transferTagsPrepare(childID, id, oldTagsToBeRemoved).done(function (data) { //Also remove possible_duplicate
-                        Post.update_batch([data], reloadPage);
+                    ajaxGetPostObj(childID).done(obj => {              
+                        Post.update_batch([transferTagsPrepare(obj, post_id)], reloadPage);
                     });
                 };
                 notice.appendChild(node);
