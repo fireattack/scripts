@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       4.0
+// @version       4.1
 // ==/UserScript==
 
 
