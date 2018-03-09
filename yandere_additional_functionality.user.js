@@ -58,7 +58,7 @@ function ajaxGetPostObj(id, lookForChild = false) {
 }
 
 function transferTagsPrepare(postObj, targetID, oldTagsToBeRemoved = defaultOldTagsToBeRemoved) {
-    var tags = postObj.tags.split(" ");
+    let tags = (Array.isArray(postObj.tags))? postObj.tags : postObj.tags.split(" ");
     tags.push(postObj.rating);
     tags = tags.filter(el => !doNotTransfer.includes(el));
     return toBeUpdated = {
