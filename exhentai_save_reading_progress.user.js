@@ -24,29 +24,44 @@ function setReadProgress () {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://exhentai.org/', true);
     var maxId = 0;
+    var readURL = '';
     xhr.onload = () => {
         var firstPage = xhr.responseXML;
         var nodes = firstPage.querySelectorAll('.id1');
         
         nodes.forEach(node => {
             let id = Number(node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1]);
-            if (id>maxId) maxId = id;
+            let url = node.querySelector('a').href;
+            if (id>maxId) {
+                maxId = id;
+                readURL = url;
         });
         localStorage.setItem('readId', maxId);
+        localStorage.setItem('readURL', readURL);
         changeStyleOfRead(maxId);
     };
     xhr.responseType = 'document';
     xhr.send();
 }
 
-var myDiv = document.createElement('div');
-myDiv.id = 'mydiv';
-myDiv.style.cssText = 'position: fixed; left: 10px; top: 10px;';
-document.querySelector('body').appendChild(myDiv);
-var myBtn = document.createElement('button');
-myBtn.textContent = 'Set reading progress!';
-myBtn.onclick = () => { setReadProgress(); };
-myDiv.appendChild(myBtn);
+if (/\.org\/?$|org\/\?/i.test(window.location.href)) {
+    var readId = Number(localStorage.getItem('readId'));
+    var readURL = localStorage.getItem('readURL');
+    changeStyleOfRead(readId);
 
-var readId = Number(localStorage.getItem('readId'));
-changeStyleOfRead(readId);
+    let test = `abc${abc}`;
+
+    var myDiv = document.createElement('div');
+    myDiv.id = 'mydiv';
+    myDiv.style.cssText = 'position: fixed; left: 10px; top: 10px; font-size: 12pt; background-color: #574158 ';
+    document.querySelector('body').appendChild(myDiv);
+
+    var label = document.createElement('p');
+    label.innerHTML = `Your last progress is: <a href="${readURL}">${readId}</a>`;    
+    myDiv.appendChild(label);
+    var myBtn = document.createElement('button');
+    myBtn.textContent = 'Set reading progress!';
+    myBtn.onclick = () => { setReadProgress(); };
+    myDiv.appendChild(myBtn);
+
+}
