@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       4.1
+// @version       4.2
 // ==/UserScript==
 
 
@@ -263,7 +263,7 @@ if (/post$|post\?|post\/$|pool\/show/i.test(window.location.href)) {
 
 // Pool index modification
 if (/pool\/show/i.test(window.location.href)) {
-    
+
     // Feature: add some paras for "Index View" link
     let lis = document.querySelectorAll('ul#subnavbar > li');
     // When i is >= lis.length, it returns undefined and therefore stops the loop. Tricky.. 
