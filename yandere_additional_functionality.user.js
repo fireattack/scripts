@@ -223,9 +223,7 @@ if (/pool\/update/i.test(window.location.href)) {
     newButton.value = 'Fix name';
     newButton.style.verticalAlign = 'middle';
     newButton.onclick = () => {
-
         var myMatch = poolName.value.match(/\[(.+)\] *(.+?)( \(.+\))*$/);
-
         if (myMatch) {
             var desc = document.querySelector('#pool_description');
             //desc.value = poolName.value + '\n' + desc.value;
@@ -234,7 +232,6 @@ if (/pool\/update/i.test(window.location.href)) {
             }
             poolName.value = myMatch[1] + ' - ' + myMatch[2];
         }
-
         document.querySelector('#pool_is_public').checked = false;
         document.querySelector('#pool_is_active').checked = false;
     };
@@ -251,23 +248,38 @@ if (/pool\/update/i.test(window.location.href)) {
 if (/post$|post\?|post\/$|pool\/show/i.test(window.location.href)) {
 
     // Feature: restore PNG image's direct link URL and resolution display to original, instead of its JPEG version's
-    postLis = document.querySelectorAll('ul#post-list-posts > li');
+    let postLis = document.querySelectorAll('ul#post-list-posts > li');
     postLis.forEach(li => {
-        var directlink = li.querySelector('a.directlink');
-        if (/.*re\/jpeg.*/i.test(directlink)) {
-            directlink.href = directlink.href.replace(/jpeg/, 'image');
-            directlink.href = directlink.href.replace(/\.jpg/, '\.png');
-            var id = li.id.match(/\d+/)[0];
-            var width = Post.posts._object[id].width;
-            var height = Post.posts._object[id].height;
-            directlink.lastChild.textContent = `${width} x ${height}`;
+        let directLink = li.querySelector('a.directlink');
+        if (/.*re\/jpeg\/.*/i.test(directLink)) { // You can directly test DOM element??
+            directLink.href = directLink.href.replace(/^(.+)\/jpeg\/(.+)\.jpg$/i, '$1/image/$2.png');
+            let id = li.id.match(/\d+/)[0];
+            let width = Post.posts._object[id].width;
+            let height = Post.posts._object[id].height;
+            directLink.lastChild.textContent = `${width} x ${height}`;
         }
     });
 }
 
-// User page modification
+// Pool index modification
+if (/pool\/show/i.test(window.location.href)) {
+    
+    // Feature: add some paras for "Index View" link
+    let lis = document.querySelectorAll('ul#subnavbar > li');
+    // When i is >= lis.length, it returns undefined and therefore stops the loop. Tricky.. 
+    //From: https://stackoverflow.com/a/6260833/3939155
+    for (let i = 0, li; li = lis[i]; ++i) {
+        if (li.textContent.includes('Index View')) {
+            li.firstChild.href += '+limit%3A100+holds%3Aall';
+            break;
+        }
+    }
+}
 
+// User page modification
 if (/user\/show/i.test(window.location.href)) {
+
+    // Feature: add a link to show all deleted posts of this user
     let node1 = document.querySelector("a[href*='/post?tags=user']");
     let node2 = document.querySelector("a[href*='deleted_index']");
     let myHTML = " (<a href=" + node1.href + "+deleted:true>index show</a>)";
