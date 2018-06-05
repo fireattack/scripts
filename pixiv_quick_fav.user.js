@@ -2,7 +2,7 @@
 // @name              Pixiv quick fav
 // @name:zh-CN        Pixiv 一键收藏
 // @namespace         https://twitter.com/ikenaikoto
-// @version           1.4
+// @version           1.5
 // @description       One-click fav on Pixiv
 // @description:zh-cn Pixiv 一键收藏，避免烦人的页面跳转
 // @author            fireattack
@@ -48,10 +48,8 @@ var config = {
 observer.observe(target, config);
 
 function main(favBtn) {
-    var color = window.getComputedStyle(favBtn.querySelectorAll('path')[0])['fill'];
-
-    if (color = "rgb(255, 255, 255)") {
-
+    var color = window.getComputedStyle(favBtn.querySelectorAll('path')[0]).fill;
+    if (color != "rgb(255, 64, 96)") {
         favBtn.onclick = (event) => {
             var data = new FormData();
             data.append('mode', 'save_illust_bookmark');
@@ -67,9 +65,9 @@ function main(favBtn) {
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xhr.onload = () => {
                 var jsonResponse = JSON.parse(xhr.responseText);
-                if (jsonResponse.error)
-                    window.alert('Error!');
-                else {
+                if (jsonResponse.error) {
+                    console.log('Bookmark error!');
+                } else {
                     clearInterval(t);
                     favBtn.querySelectorAll('path')[0].style.fill = 'rgb(255, 64, 96)';
                     favBtn.querySelectorAll('path')[1].style.fill = 'rgb(255, 64, 96)';
@@ -80,8 +78,7 @@ function main(favBtn) {
             var i = 255;
             var j = -10;
             var t = setInterval(() => {
-                str = `rgb(${i}, 64, 96`;
-                favBtn.querySelectorAll('path')[1].style.fill = str;
+                favBtn.querySelectorAll('path')[1].style.fill = `rgb(${i}, 64, 96`;
                 i = i + j;
                 if (i < 0) {
                     i = -i;
