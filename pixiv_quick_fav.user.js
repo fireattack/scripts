@@ -2,7 +2,7 @@
 // @name              Pixiv quick fav
 // @name:zh-CN        Pixiv 一键收藏
 // @namespace         https://twitter.com/ikenaikoto
-// @version           1.0
+// @version           1.1
 // @description       One-click fav on Pixiv
 // @description:zh-cn Pixiv 一键收藏，避免烦人的页面跳转
 // @author            fireattack
