@@ -2,7 +2,7 @@
 // @name              Pixiv quick fav
 // @name:zh-CN        Pixiv 一键收藏
 // @namespace         https://twitter.com/ikenaikoto
-// @version           1.2
+// @version           1.4
 // @description       One-click fav on Pixiv
 // @description:zh-cn Pixiv 一键收藏，避免烦人的页面跳转
 // @author            fireattack
@@ -31,7 +31,7 @@ var observer = new MutationObserver(function (mutations, ob) {
         var favBtn = document.querySelector('a[href*="/bookmark_add.php"]');
         if (favBtn && favBtn.querySelectorAll('path')) {
             main(favBtn);
-            ob.disconnect();
+            //ob.disconnect();
         }
     });
 });
@@ -40,7 +40,8 @@ var observer = new MutationObserver(function (mutations, ob) {
 var config = {
     attributes: true,
     childList: true,
-    characterData: true
+    characterData: true,
+    subtree: true
 };
 
 // pass in the target node, as well as the observer options
@@ -76,8 +77,8 @@ function main(favBtn) {
             };
             xhr.send(data);
 
-            i = 255;
-            j = -10;
+            var i = 255;
+            var j = -10;
             var t = setInterval(() => {
                 str = `rgb(${i}, 64, 96`;
                 favBtn.querySelectorAll('path')[1].style.fill = str;
