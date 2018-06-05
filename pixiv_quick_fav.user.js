@@ -79,7 +79,7 @@ function main(favBtn) {
             i = 255;
             j = -10;
             var t = setInterval(() => {
-                str = `rgb(${i}, 94, 96`;
+                str = `rgb(${i}, 64, 96`;
                 favBtn.querySelectorAll('path')[1].style.fill = str;
                 i = i + j;
                 if (i < 0) {
