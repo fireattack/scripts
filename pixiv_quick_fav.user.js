@@ -2,7 +2,7 @@
 // @name              Pixiv quick fav
 // @name:zh-CN        Pixiv 一键收藏
 // @namespace         https://twitter.com/ikenaikoto
-// @version           1.5
+// @version           1.6
 // @description       One-click fav on Pixiv
 // @description:zh-cn Pixiv 一键收藏，避免烦人的页面跳转
 // @author            fireattack
@@ -47,10 +47,27 @@ var config = {
 // pass in the target node, as well as the observer options
 observer.observe(target, config);
 
+function gradientColorChange(favBtn) {
+    var i = 255;
+    var j = -10;
+    return setInterval(() => {
+        favBtn.querySelectorAll('path')[1].style.fill = `rgb(${i}, 64, 96`;
+        i = i + j;
+        if (i < 0) {
+            i = -i;
+            j = -j;
+        };
+        if (i > 255) {
+            i = 255 - (i - 255);
+            j = -j;
+        }
+    }, 30);
+}
+
 function main(favBtn) {
-    var color = window.getComputedStyle(favBtn.querySelectorAll('path')[0]).fill;
-    if (color != "rgb(255, 64, 96)") {
-        favBtn.onclick = (event) => {
+    favBtn.onclick = (event) => {
+        var color = window.getComputedStyle(favBtn.querySelectorAll('path')[0]).fill;
+        if (color != "rgb(255, 64, 96)") {
             var data = new FormData();
             data.append('mode', 'save_illust_bookmark');
             data.append('illust_id', window.location.href.match(/id=(\d+)/)[1]);
@@ -74,22 +91,7 @@ function main(favBtn) {
                 }
             };
             xhr.send(data);
-
-            var i = 255;
-            var j = -10;
-            var t = setInterval(() => {
-                favBtn.querySelectorAll('path')[1].style.fill = `rgb(${i}, 64, 96`;
-                i = i + j;
-                if (i < 0) {
-                    i = -i;
-                    j = -j;
-                };
-                if (i > 255) {
-                    i = 255 - (i - 255);
-                    j = -j;
-                }
-            }, 30);
-
+            t = gradientColorChange(favBtn);
             event.preventDefault();
         }
     }
