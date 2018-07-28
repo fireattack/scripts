@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         S1 Poll Sort
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.1
+// @version      0.2
 // @description  try to take over the world!
 // @author       fireattack
-// @match        https://*.saraba1st.com/2b/forum.php?mod=viewthread&tid=*
+// @match        http*://*.saraba1st.com/2b/forum.php?mod=viewthread&tid=*
+// @match        http*://*.saraba1st.com/2b/thread-*-*-*.html
 // ==/UserScript==
 
 function sortTable() {
