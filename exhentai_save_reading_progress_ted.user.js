@@ -2,7 +2,7 @@
 // @name              Exhentai save reading progress ted ver.
 // @name:zh-CN        Exhentai标记阅读进度 ted ver.
 // @namespace         https://twitter.com/ikenaikoto
-// @version           1.0
+// @version           1.1
 // @description       Exhentai save reading progress
 // @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
@@ -21,14 +21,14 @@ function changeStyleOfRead(readId, readURL) {
     }
 }
 
-function setReadProgress () {
+function setReadProgress() {
     let maxId = Number(localStorage.getItem('readId'));
     var nodes = document.querySelectorAll('.id1');
-    let node = nodes[nodes.length-1];
+    let node = nodes[nodes.length - 1];
 
     let id = Number(node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1]);
     let url = node.querySelector('a').href;
-    if (id>maxId||!maxId) {
+    if (!maxId || id > maxId ) {
         localStorage.setItem('readId', id);
         localStorage.setItem('readURL', url);
         changeStyleOfRead(id, url);
@@ -54,7 +54,9 @@ if (/\.org\/?$|org\/\?/i.test(window.location.href)) {
     myDiv.appendChild(label);
     var myBtn = document.createElement('button');
     myBtn.textContent = 'Set reading progress!';
-    myBtn.onclick = () => { setReadProgress(); };
+    myBtn.onclick = () => {
+        setReadProgress();
+    };
     myDiv.appendChild(myBtn);
 
     let readId = Number(localStorage.getItem('readId'));
