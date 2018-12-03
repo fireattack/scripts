@@ -11,7 +11,7 @@ $('head').append('<style>.we-artwork::before{display:none !important;}</style>')
 
 function addLink() {
     var img = $('picture img').first();
-    var url = img.attr('src').replace(/(.+)\/\d+x0w\.jpg/, '$1/9999x0w.png');
+    var url = img.attr('src').replace(/(.+)\/\d+x0w\.jpg/, '$1/999999999x0w.png');
     img.wrap("<a href='" + url + "' </a>");
 }
 
