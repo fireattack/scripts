@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         iTunes Cover Art Click to Show Original
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.2
+// @version      0.21
 // @description  Click on cover art to get original largest PNG image.
 // @author       fireattack
 // @match        *://itunes.apple.com/*/album/*
