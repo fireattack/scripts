@@ -2,7 +2,7 @@
 // @name              Exhentai save reading progress
 // @name:zh-CN        Exhentai标记阅读进度
 // @namespace         https://twitter.com/ikenaikoto
-// @version           0.7
+// @version           0.8
 // @description       Exhentai save reading progress
 // @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
@@ -47,7 +47,7 @@ function setReadProgress () {
     xhr.send();
 }
 
-if (/\.org\/?$|org\/\?/i.test(window.location.href)) {
+if (/^(?!.*\/g\/).*$/i.test(window.location.href)) {
 
     var myDiv = document.createElement('div');
     myDiv.id = 'mydiv';
