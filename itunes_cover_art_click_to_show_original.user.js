@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         iTunes Cover Art Click to Show Original
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.2
+// @version      0.21
 // @description  Click on cover art to get original largest PNG image.
 // @author       fireattack
 // @match        *://itunes.apple.com/*/album/*
@@ -11,7 +11,7 @@ $('head').append('<style>.we-artwork::before{display:none !important;}</style>')
 
 function addLink() {
     var img = $('picture img').first();
-    var url = img.attr('src').replace(/(.+)\/\d+x0w\.jpg/, '$1/9999x0w.png');
+    var url = img.attr('src').replace(/(.+)\/\d+x0w\.jpg/, '$1/999999999x0w.png');
     img.wrap("<a href='" + url + "' </a>");
 }
 
