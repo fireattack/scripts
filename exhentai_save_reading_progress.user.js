@@ -59,7 +59,7 @@ function setReadProgress() {
             localStorage.setItem('readURL', url);
             changeStyleOfRead(id, url);
         }
-    } else  {
+    } else {
 
         myBtn.textContent = 'Setting..';
         var xhr = new XMLHttpRequest();
@@ -70,9 +70,9 @@ function setReadProgress() {
             var firstPage = xhr.responseXML;
             var nodes = firstPage.querySelectorAll('.gl1t');
             nodes.forEach(node => {
-                let id = Number(node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1]);
                 let url = node.querySelector('a').href;
-                if (id>maxId) {
+                let id = Number(url.match(/\/g\/(\d+?)\//)[1]);
+                if (id > maxId) {
                     maxId = id;
                     readURL = url;
                 }
