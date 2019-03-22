@@ -108,7 +108,7 @@ if (document.querySelector('div#toppane')) {
         localStorage.setItem('option1', option1Box.checked);
     };
     optionAndLabel.appendChild(option1Box);
-    optionAndLabel.appendChild(document.createTextNode('Mark to this page only'));
+    optionAndLabel.appendChild(document.createTextNode('Mark up to this page only'));
 
     var myBtn = document.createElement('button');
     myBtn.textContent = 'Set reading progress!';
