@@ -7,7 +7,30 @@
 // @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
 // @match             *://exhentai.org/*
+// @grant             GM_addStyle
 // ==/UserScript==
+
+GM_addStyle(`
+#mydiv {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    font-size: 12pt;
+    background-color: #574158;
+    padding: 10px;
+}
+
+#mylabel {
+    padding: 5px;
+    margin: 0 0 5px;
+    display: block;
+}
+
+#mylabel:hover {
+    background: #442948;
+    cursor: pointer;
+   }
+`);
 
 function changeStyleOfRead(readId, readURL) {
     if (readId) {
@@ -21,13 +44,13 @@ function changeStyleOfRead(readId, readURL) {
     }
 }
 
-function setReadProgress() {    
+function setReadProgress() {
 
     if (option1Box.checked) {
 
         let maxId = Number(localStorage.getItem('readId'));
         let nodes = document.querySelectorAll('.gl1t');
-        let node = nodes[nodes.length - 1];        
+        let node = nodes[nodes.length - 1];
         let url = node.querySelector('a').href;
         let id = Number(url.match(/\/g\/(\d+?)\//)[1]);
 
@@ -45,7 +68,7 @@ function setReadProgress() {
         let readURL = '';
         xhr.onload = () => {
             var firstPage = xhr.responseXML;
-            var nodes = firstPage.querySelectorAll('.gl1t');        
+            var nodes = firstPage.querySelectorAll('.gl1t');
             nodes.forEach(node => {
                 let id = Number(node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1]);
                 let url = node.querySelector('a').href;
@@ -68,13 +91,6 @@ if (document.querySelector('div#toppane')) {
 
     var myDiv = document.createElement('div');
     myDiv.id = 'mydiv';
-    myDiv.style.cssText = `
-    position: fixed;
-    left: 10px;
-    top: 10px;
-    font-size: 12pt;
-    background-color: #574158;
-    padding: 10px`;
     document.querySelector('body').appendChild(myDiv);
 
     var label = document.createElement('p');
@@ -82,10 +98,7 @@ if (document.querySelector('div#toppane')) {
     myDiv.appendChild(label);
 
     var optionAndLabel = document.createElement('label');
-    optionAndLabel.style.cssText = `
-    padding:5px;
-    margin:0 0 5px;
-    display:block;`;
+    optionAndLabel.id = 'mylabel';
     myDiv.appendChild(optionAndLabel);
 
     var option1Box = document.createElement('input');
