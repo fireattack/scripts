@@ -42,11 +42,11 @@ function get_my_name() {
 }
 
 function get_version() {
-    return "0.1.2 b6";
+    return "0.1.2 b6 kai 1";
 }
 
 function get_author() {
-    return "cimoc";
+    return "cimoc fireattack";
 }
 
 function start_search(info, callback) {
@@ -92,10 +92,11 @@ function start_search(info, callback) {
             return false;
         }
         //筛选曲名及艺术家
-        var song = result.songs;
+        var song = result.songs;        
         var out = [0, 0];
         var b = 0;
         var c = 0;
+        var double_break = false;
         for (var k in song) {
             var ncm_name = song[k].name;
             for (var a_k in song[k].artists) {
@@ -107,6 +108,7 @@ function start_search(info, callback) {
                     c = a_k;
                     out[0] = p0;
                     out[1] = p1;
+                    double_break = true;
                     break;
                 }
                 if (p0 > out[0]) {
@@ -121,7 +123,10 @@ function start_search(info, callback) {
                     }
                 }
             }
-        }
+            if (double_break) {
+                break;
+            }            
+        } 
         var res_id = song[b].id;
         var res_name = song[b].name;
         var res_artist = song[b].artists[c].name;
