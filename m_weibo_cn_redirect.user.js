@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         m.weibo.cn redirect
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.1
+// @version      0.2
 // @description  try to take over the world!
 // @author       fireattack
 // @match        https://m.weibo.cn/status/*
@@ -101,6 +101,12 @@ WeiboUtil.mid2url = function (mid) {
         var num = mid.substring(offset1, offset2);
 
         num = this.int10to62(num);
+        if (offset1 > 0) //若不是第一组，则不足4位补0
+        {
+            while (num.length < 4) {
+                num = '0' + num;
+            }
+        }
         url = num + url;
     }
 
@@ -116,8 +122,8 @@ if (m) {
         let m2 = el.innerText.match(/"user".+?(\d+)/is);
         if (m2) {
             let uid = m2[1];
-            //console.log(`https://weibo.com/${uid}/${url}`)
-            window.location.href = `https://weibo.com/${uid}/${url}`;
+            console.log(`https://weibo.com/${uid}/${url}`)
+            //window.location.href = `https://weibo.com/${uid}/${url}`;
             
         }
     })
