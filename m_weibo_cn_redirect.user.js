@@ -122,8 +122,8 @@ if (m) {
         let m2 = el.innerText.match(/"user".+?(\d+)/is);
         if (m2) {
             let uid = m2[1];
-            console.log(`https://weibo.com/${uid}/${url}`)
-            //window.location.href = `https://weibo.com/${uid}/${url}`;
+            //console.log(`https://weibo.com/${uid}/${url}`)
+            window.location.href = `https://weibo.com/${uid}/${url}`;
             
         }
     })
