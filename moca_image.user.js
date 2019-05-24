@@ -15,7 +15,7 @@ GM_addStyle(`
   background-color: #EEEEEE;
   color: #333333;
   display: block;
-  width: 200px;
+  width: 150px;
   padding: 2px 6px 2px 6px;
   border-top: 1px solid #CCCCCC;
   border-right: 1px solid #333333;
