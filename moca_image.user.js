@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Moca image directly download
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.2
+// @version      0.3
 // @description  Add a button to download image directly from moca-news.com iamge page.
 // @author       fireattack
 // @match        https://moca-news.net/article/*/image*.html
@@ -24,6 +24,7 @@ GM_addStyle(`
 }
 `);
 
+// From https://stackoverflow.com/a/21274652
 addJS_Node(image_load_body);
 
 function addJS_Node(text, s_URL, funcToRun, runOnLoad) {
@@ -41,7 +42,7 @@ function addJS_Node(text, s_URL, funcToRun, runOnLoad) {
     targ.appendChild(scriptNode);
 }
 
-function image_load_body(art_id, img_id, mode, retry) {
+function image_load_body(art_id, img_id, _mode, _retry) {
 
     var addDownloadButton = function (blob, filename) {
         var a = document.createElement('a');
@@ -77,11 +78,7 @@ function image_load_body(art_id, img_id, mode, retry) {
         if (this.readyState == 4) {
             if (this.status == 200) {
 
-                console.log('injected');
-                var wrap1_element = document.getElementById('cvs_wrap_1');
-                var wrap2_element = document.getElementById('cvs_wrap_2');
-
-                wrap1_element.style.display = 'block';
+                document.getElementById('cvs_wrap_1').style.display = 'block';
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('image_cvs').style.display = 'none';
                 document.getElementById('image_cvs_cover').style.display = 'none';
@@ -94,7 +91,6 @@ function image_load_body(art_id, img_id, mode, retry) {
                 var img_src = "./image/" + (location.href).substr((location.href).indexOf("/image") + 6, 3) + check_str(art_id, img_id) + ".jpg";
                 download(img_src);
                 imgContainer.src = img_src;
-                console.log('added img');
 
             }
         }
