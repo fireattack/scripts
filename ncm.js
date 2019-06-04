@@ -38,7 +38,7 @@ var offset=-20;
 var xmlHttp = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
 var debug = false;
 function get_my_name() {
-    return "网易云音乐";
+    return "网易云音乐-kai";
 }
 
 function get_version() {
@@ -71,6 +71,7 @@ function start_search(info, callback) {
         //noinspection JSAnnotator
         xmlHttp.Option(6) = false;
         xmlHttp.SetRequestHeader("Host", "music.163.com");
+        xmlHttp.SetRequestHeader("X-Real-IP","211.161.244.70"); // From https://github.com/acgotaku/NetEaseMusicWorld/blob/master/chrome/background.js
         xmlHttp.SetRequestHeader("Origin", "http://music.163.com");
         xmlHttp.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36");
         xmlHttp.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
