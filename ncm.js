@@ -63,20 +63,21 @@ function start_search(info, callback) {
     var s = artist ? (title + "-" + artist) : title;
     //searchURL = "http://music.163.com/api/search/get/web?csrf_token=";//如果下面的没用,试试改成这句
     searchURL = "http://music.163.com/api/search/get/";
-    var post_data = 'hlpretag=<span class="s-fc7">&hlposttag=</span>&s=' + encodeURIComponent(s) + '&type=1&offset=0&total=true&limit=' + limit;
+    var post_data = 's=' + encodeURIComponent(s) + '&type=1&offset=0&total=true&limit=' + limit;
+    //var post_data = 'hlpretag=<span class="s-fc7">&hlposttag=</span>&s=' + encodeURIComponent(s) + '&type=1&offset=0&total=true&limit=' + limit;    
     try {
         xmlHttp.Open("POST", searchURL, false);
         //noinspection JSAnnotator
         xmlHttp.Option(4) = 13056;
         //noinspection JSAnnotator
         xmlHttp.Option(6) = false;
-        xmlHttp.SetRequestHeader("Host", "music.163.com");
-        xmlHttp.SetRequestHeader("X-Real-IP","211.161.244.70"); // From https://github.com/acgotaku/NetEaseMusicWorld/blob/master/chrome/background.js
-        xmlHttp.SetRequestHeader("Origin", "http://music.163.com");
-        xmlHttp.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36");
+        //xmlHttp.SetRequestHeader("X-Real-IP","211.161.244.70");
+        //xmlHttp.SetRequestHeader("Host", "music.163.com");
+        //xmlHttp.SetRequestHeader("Origin", "http://music.163.com");
+        //xmlHttp.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36");
         xmlHttp.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xmlHttp.SetRequestHeader("Referer", "http://music.163.com/search/");
-        xmlHttp.SetRequestHeader("Connection", "Close");
+        //xmlHttp.SetRequestHeader("Referer", "http://music.163.com/search/");
+        //xmlHttp.SetRequestHeader("Connection", "Close");
         xmlHttp.Send(post_data);
     } catch (e) {
         debug && console("search failed");
@@ -85,7 +86,7 @@ function start_search(info, callback) {
     var newLyric = callback.CreateLyric();
 
     if (xmlHttp.Status == 200) {
-        //  console(xmlHttp.responseText);
+        console(xmlHttp.responseText);
         var ncm_back = json(xmlHttp.responseText);
         var result = ncm_back.result;
         if (ncm_back.code != 200 || !result.songCount) {
