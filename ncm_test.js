@@ -33,6 +33,9 @@ var timefix = 0.01;
 //当timefix有效时设置offset(毫秒),防闪
 var offset = -20;
 
+var debug = true;
+
+// Changes to enable it in Node.js
 const http = require('http');
 var newLyric = {};
 var callback = {
@@ -41,14 +44,13 @@ var callback = {
     }
     
 }
+
 info = {
-    Title: '月曜日のクリームソーダ',
-    Artist: '中村温姫'
+    Title: 'ハルマチ女子',
+    Artist: '近藤唯'
 }
 
 start_search(info, callback);
-
-var debug = true;
 
 function get_my_name() {
     return "网易云音乐-kai";
@@ -75,6 +77,7 @@ function start_search(info, callback) {
     //搜索
     var s = artist ? (title + "-" + artist) : title;
     searchURL = "http://music.163.com/api/search/get?" + 's=' + encodeURIComponent(s) + '&type=1&offset=0&total=true&limit=' + limit;
+    debug && console.log(searchURL);
     http.get(searchURL, res => {
         console.log(`statusCode: ${res.statusCode}`)
         var body = [];
@@ -82,8 +85,8 @@ function start_search(info, callback) {
             body.push(d);
         })
         res.on('end', () => {
-            console.log(body.toString());
-            var ncm_back = json(body);
+            // console.log(body.join(''));
+            var ncm_back = json(body.join(''));
             var result = ncm_back.result;
             if (ncm_back.code != 200 || !result.songCount) {
                 debug && console.log("get info failed");
@@ -138,9 +141,8 @@ function start_search(info, callback) {
                 res.on('data', (d) => {
                     body.push(d);
                 })
-                res.on('end', () => {
-
-                    var ncm_lrc = json(body);
+                res.on('end', () => {                    
+                    var ncm_lrc = json(body.join(''));
                     var issettran = 0;
                     var issetlrc = 0;
                     if (!ncm_lrc.lrc) return false;
