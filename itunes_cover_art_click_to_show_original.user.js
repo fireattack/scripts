@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         iTunes Cover Art Click to Show Original
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.21
+// @version      0.22
 // @description  Click on cover art to get original largest PNG image.
 // @author       fireattack
 // @match        *://itunes.apple.com/*/album/*
+// @match        *://music.apple.com/*/album/*
 // ==/UserScript==
 
 $('head').append('<style>.we-artwork::before{display:none !important;}</style>'); // Remove cover art css blocking.
