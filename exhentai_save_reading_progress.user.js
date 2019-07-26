@@ -1,12 +1,13 @@
 // ==UserScript==
-// @name              Exhentai save reading progress
-// @name:zh-CN        Exhentai标记阅读进度
+// @name              E-hentai save reading progress
+// @name:zh-CN        E-hentai标记阅读进度
 // @namespace         https://twitter.com/ikenaikoto
-// @version           2.0
+// @version           2.1
 // @description       Exhentai save reading progress
 // @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
 // @match             *://exhentai.org/*
+// @match             *://e-hentai.org/*
 // @grant             GM_addStyle
 // ==/UserScript==
 
