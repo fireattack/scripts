@@ -2,11 +2,10 @@
 // @name              E-hentai save reading progress
 // @name:zh-CN        E-hentai标记阅读进度
 // @namespace         https://twitter.com/ikenaikoto
-// @version           2.1
+// @version           2.2
 // @description       Exhentai save reading progress
 // @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
-// @match             *://exhentai.org/*
 // @match             *://e-hentai.org/*
 // @grant             GM_addStyle
 // ==/UserScript==
@@ -17,7 +16,7 @@ GM_addStyle(`
     left: 10px;
     top: 10px;
     font-size: 12pt;
-    background-color: #574158;
+    background-color: antiquewhite;
     padding: 10px;
 }
 
@@ -39,7 +38,7 @@ function changeStyleOfRead(readId, readURL) {
         nodes.forEach(node => {
             let id = Number(node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1]);
             if (id <= readId)
-                node.style.backgroundColor = '#574158';
+                node.style.backgroundColor = 'antiquewhite';
         });
         label.innerHTML = readURL ? `Your last progress is: <b><a href="${readURL}">${readId}</a></b>` : `Your last progress is: <b>${readId}</b>`;
     }
@@ -64,7 +63,7 @@ function setReadProgress() {
 
         myBtn.textContent = 'Setting..';
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'https://exhentai.org/', true);
+        xhr.open('GET', 'https://e-hentai.org/', true);
         let maxId = 0;
         let readURL = '';
         xhr.onload = () => {
