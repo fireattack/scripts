@@ -2,7 +2,7 @@
 // @name              E-hentai save reading progress
 // @name:zh-CN        E-hentai标记阅读进度
 // @namespace         https://twitter.com/ikenaikoto
-// @version           3.0
+// @version           3.1
 // @description       Exhentai save reading progress
 // @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
@@ -71,7 +71,7 @@ function setReadProgress() {
 
         myBtn.textContent = 'Setting..';
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', `${window.location.protocol}//${windows.location.hostname}/`, true);
+        xhr.open('GET', `${window.location.protocol}//${window.location.hostname}/`, true);
         let maxId = 0;
         let readURL = '';
         xhr.onload = () => {
