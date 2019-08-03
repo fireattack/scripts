@@ -2,13 +2,21 @@
 // @name              E-hentai save reading progress
 // @name:zh-CN        E-hentai标记阅读进度
 // @namespace         https://twitter.com/ikenaikoto
-// @version           2.2
+// @version           3.0
 // @description       Exhentai save reading progress
 // @description:zh-CN Exhentai标记阅读进度
 // @author            fireattack
 // @match             *://e-hentai.org/*
+// @match             *://exhentai.org/*
 // @grant             GM_addStyle
 // ==/UserScript==
+
+let color1 = 'antiquewhite';
+let color2 = '#ead5b9';
+if (window.location.hostname === 'exhentai.org') {
+    color1 = '#574158';
+    color2 = '#442948';
+}
 
 GM_addStyle(`
 #mydiv {
@@ -16,7 +24,7 @@ GM_addStyle(`
     left: 10px;
     top: 10px;
     font-size: 12pt;
-    background-color: antiquewhite;
+    background-color: ${color1};
     padding: 10px;
 }
 
@@ -27,7 +35,7 @@ GM_addStyle(`
 }
 
 #mylabel:hover {
-    background: #442948;
+    background: ${color2};
     cursor: pointer;
    }
 `);
@@ -38,7 +46,7 @@ function changeStyleOfRead(readId, readURL) {
         nodes.forEach(node => {
             let id = Number(node.querySelector('a').href.match(/\/g\/(\d+?)\//)[1]);
             if (id <= readId)
-                node.style.backgroundColor = 'antiquewhite';
+                node.style.backgroundColor = color1;
         });
         label.innerHTML = readURL ? `Your last progress is: <b><a href="${readURL}">${readId}</a></b>` : `Your last progress is: <b>${readId}</b>`;
     }
@@ -63,7 +71,7 @@ function setReadProgress() {
 
         myBtn.textContent = 'Setting..';
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'https://e-hentai.org/', true);
+        xhr.open('GET', `${window.location.protocol}//${windows.location.hostname}/`, true);
         let maxId = 0;
         let readURL = '';
         xhr.onload = () => {
