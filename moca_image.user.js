@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Moca image directly download
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.4
+// @version      0.5
 // @description  Add a button to download image directly from moca-news.com iamge page.
 // @author       fireattack
 // @match        https://moca-news.net/article/*/image*.html
@@ -16,13 +16,22 @@ GM_addStyle(`
   color: #333333;
   display: block;
   width: 150px;
+  text-align: center;
+  margin: 5px auto 0 auto;
+
   padding: 2px 6px 2px 6px;
   border-top: 1px solid #CCCCCC;
   border-right: 1px solid #333333;
   border-bottom: 1px solid #333333;
   border-left: 1px solid #CCCCCC;
 }
+#img_container {
+  display: block;
+  margin: auto;
+  width: auto;
+}
 `);
+
 
 // From https://stackoverflow.com/a/21274652
 addJS_Node(image_load_body);
@@ -52,7 +61,6 @@ function image_load_body(art_id, img_id, _mode, _retry) {
 
         var imgContainer = document.createElement('img');
         imgContainer.id = 'img_container';
-        imgContainer.style.width = 'auto';
         imgContainer.src = blob;
         document.getElementById('cvs_wrap_2').append(imgContainer);
         var a = document.createElement('a');
@@ -92,4 +100,5 @@ function image_load_body(art_id, img_id, _mode, _retry) {
 
     httpObj.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=shift_jis');
     httpObj.send('art_id=' + art_id);
+    document.oncontextmenu  = null;
 }
