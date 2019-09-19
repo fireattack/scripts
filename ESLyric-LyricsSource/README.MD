@@ -1,6 +1,8 @@
 # Sources and references
 
-推荐使用下面这些。
+ESLyric作者原始脚本：https://drive.google.com/drive/folders/0B2KhsZAUDf9CMFUtOTZJRXV2Z2M
+
+推荐使用下面这些mod：
 
 ## QQ音乐
 
