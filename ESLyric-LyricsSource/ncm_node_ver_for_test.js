@@ -27,7 +27,7 @@ var bracket = [
 ];
 
 //修复newtype歌词保存 翻译提前秒数 设为0则取消 如果翻译歌词跳的快看的难过,蕴情设为0.4-1.0
-var savefix = 0.01;
+var savefix = 0.05;
 //new_merge歌词翻译时间轴滞后秒数，防闪
 var timefix = 0.01;
 //当timefix有效时设置offset(毫秒),防闪
@@ -46,8 +46,8 @@ var callback = {
 }
 
 info = {
-    Title: 'ハルマチ女子',
-    Artist: '近藤唯'
+    Title: 'Sunset カンフー',
+    Artist: 'TrySail'
 }
 
 start_search(info, callback);
@@ -88,7 +88,7 @@ function start_search(info, callback) {
             // console.log(body.join(''));
             var ncm_back = json(body.join(''));
             var result = ncm_back.result;
-            if (ncm_back.code != 200 || !result.songCount) {
+            if (ncm_back.code != 200) {
                 debug && console.log("get info failed");
                 return false;
             }

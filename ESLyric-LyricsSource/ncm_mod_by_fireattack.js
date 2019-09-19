@@ -28,7 +28,7 @@ var bracket = [
 ];
 
 //修复newtype歌词保存 翻译提前秒数 设为0则取消 如果翻译歌词跳的快看的难过,蕴情设为0.4-1.0
-var savefix = 0.01;
+var savefix = 0.05;
 //new_merge歌词翻译时间轴滞后秒数，防闪
 var timefix = 0.01;
 //当timefix有效时设置offset(毫秒),防闪
@@ -89,7 +89,7 @@ function start_search(info, callback) {
         console(xmlHttp.responseText);
         var ncm_back = json(xmlHttp.responseText);
         var result = ncm_back.result;
-        if (ncm_back.code != 200 || !result.songCount) {
+        if (ncm_back.code != 200) {
             debug && console("get info failed");
             return false;
         }
