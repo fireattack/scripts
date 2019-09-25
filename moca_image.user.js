@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Moca image directly download
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.5
+// @version      0.6
 // @description  Add a button to download image directly from moca-news.com iamge page.
 // @author       fireattack
 // @match        https://moca-news.net/article/*/image*.html
@@ -55,9 +55,10 @@ function image_load_body(art_id, img_id, _mode, _retry) {
 
     var addDownloadButton = function (blob, filename) {
         document.getElementById('cvs_wrap_1').style.display = 'block';
-        document.getElementById('loader').style.display = 'none';
+        document.getElementById('loader_largeimage').style.display = 'none';
         document.getElementById('image_cvs').style.display = 'none';
         document.getElementById('image_cvs_cover').style.display = 'none';
+        document.getElementById('large_image').style.height = 'auto';
 
         var imgContainer = document.createElement('img');
         imgContainer.id = 'img_container';
