@@ -1,0 +1,21 @@
+@-moz-document domain("webview-dot-theaterdays.appspot.com") {
+    html {
+        zoom: 100% !important;
+    }
+    
+    .article-container {
+        width: 765px;
+        margin: auto;
+    }
+    
+    * {
+        -webkit-user-select: auto !important;
+    }
+    
+    .hero {
+        width: 95% !important;
+        height:auto !important;
+        margin-left: auto !important; 
+        margin-bottom: 10px !important;
+    }
+    }
