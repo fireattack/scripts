@@ -1,6 +1,8 @@
-let func = 'b9b';
+let func = 'b9b'; // viewer_image_2.0.10_2019-09-18.js
 if (window.location.href.includes('https://magazinewalker.jp/viewer'))
-    func = 'B0F';
+    func = 'B0F'; // viewer_image_v0.1.10_2018-11-15.js
+
+// From https://jixun.moe/intercept-bookwalker-tw-image
 
 const myCanvas1 = document.createElement('canvas');
 const myCanvas2 = document.createElement('canvas');
@@ -11,7 +13,7 @@ window.NFBR.a6G.a5x.prototype[func] = function () {
     if (image) {
         // 如果 image === null ，那么这一页是空白页。
         if (flag) {
-            myCanvas1.width = page.width; // Use 'page' to cut whitespace.
+            myCanvas1.width = page.width; // Use 'page' to cut whitespace. You still need to cut whitespace at the bottom manually, though.
             myCanvas1.height = page.height;
             backup.call(this, myCanvas1, page, image, {
                 x: 0,
