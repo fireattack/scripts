@@ -1,8 +1,8 @@
 /**
  * QQ Music Lyrics Source for ESLyric
- * Original Author: btx258
- * Modified by: Robotxm
- * Version: 0.1.1
+ * Original Author: btx258, Robotxm
+ * Modified by: Fireattack
+ * Version: 1.0
  * License: GPL 3.0
  * Description: Make foobar2000 with ESLyric able to show
  *              lyrics (and translation if it exists)
@@ -20,7 +20,7 @@
  * true: 以双行显示
  * false: 以单行显示 
 **/
-var dual_line = false;
+var dual_line = true;
 
 var QM_CFG = {
     DEBUG: false,
@@ -29,9 +29,9 @@ var QM_CFG = {
     L_SRV: "http://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg",
     G_PRM: "&format=json&inCharset=utf8&outCharset=utf-8",
     P_MAX: 3,
-    P_NUM: 30,
-    L_LOW: 5,
-    L_MAX: 10,
+    P_NUM: 10,
+    L_LOW: 1,
+    L_MAX: 3,
     RETRY: 1,
 };
 
@@ -46,15 +46,15 @@ var qm_abort = {
 };
 
 function get_my_name() {
-    return "QQMusic|QQ音乐";
+    return "QQ";
 }
 
 function get_version() {
-    return "0.1.1";
+    return "1.0";
 }
 
 function get_author() {
-    return "Robotxm & btx258";
+    return "Robotxm & btx258 & fireattack";
 }
 
 function start_search(info, callback) {
@@ -118,26 +118,25 @@ function start_search(info, callback) {
                         } else {
                             if (!dual_line) {
                                 new_lyric.LyricText = qm_generate_single_line(Base64.decode(lyric.lyric));
-                                callback.AddLyric(new_lyric);
                             } else {
-                                new_lyric.LyricText = Base64.decode(lyric.lyric);
-                                callback.AddLyric(new_lyric);
+                                new_lyric.LyricText = Base64.decode(lyric.lyric);                                
                             }
                         }
+                        callback.AddLyric(new_lyric);
                         count++;
                     }
                 }
                 if (count % 2 === 0) {
-                    callback.Refresh();
+                    // callback.Refresh();
                 }
             }
-            new_lyric.Dispose();
+            // new_lyric.Dispose();
         }
     }
 }
 
 function qm_download(url, param) {
-    // qm_trace("INFO-qm_download-url: " + url + ", param: " + param);
+    qm_trace("INFO-qm_download-url: " + url + ", param: " + param);
     // retry several times at most
     var i = null, xml_text = null;
     for (i = 0; i < QM_CFG.RETRY; i++) {
@@ -146,24 +145,24 @@ function qm_download(url, param) {
                 qm_http.handle = utils.CreateHttpClient();
                 qm_http.type = "u_c";
             } catch (e) {
-                // qm_trace("ERROR-qm_download-CreateHttpClient message: " + e.message);
+                qm_trace("ERROR-qm_download-CreateHttpClient message: " + e.message);
                 try {
                     qm_http.handle = utils.CreateHttpRequest("GET");
                     qm_http.type = "u_r";
                 } catch (err) {
-                    // qm_trace("ERROR-qm_download-CreateHttpRequest message: " + err.message);
+                    qm_trace("ERROR-qm_download-CreateHttpRequest message: " + err.message);
                     try {
                         qm_http.handle = new ActiveXObject("Microsoft.XMLHTTP");
                         qm_http.type = "ie";
                     } catch (error) {
-                        // qm_trace("ERROR-qm_download-ActiveXObject message: " + error.message);
+                        qm_trace("ERROR-qm_download-ActiveXObject message: " + error.message);
                         qm_http.handle = null;
                         qm_http.type = null;
                         continue;
                     }
                 }
             }
-            // qm_trace("INFO-qm_download-qm_http.type: " + qm_http.type);
+            qm_trace("INFO-qm_download-qm_http.type: " + qm_http.type);
         }
         try {
             if (param) {
@@ -189,11 +188,11 @@ function qm_download(url, param) {
                 }
             }
         } catch (e) {
-            // qm_trace("ERROR-qm_download-request message: " + e.message);
+            qm_trace("ERROR-qm_download-request message: " + e.message);
             continue;
         }
     }
-    // qm_trace("FAILED-qm_download");
+    qm_trace("FAILED-qm_download");
     return null;
 }
 
@@ -205,12 +204,12 @@ function qm_json(str) {
             // Method 1: eval
             return eval("(" + str + ")");
         } catch (e) {
-            // qm_trace("ERROR-qm_json-eval message: " + e.message);
+            qm_trace("ERROR-qm_json-eval message: " + e.message);
             try {
                 // Method 2: new Function
                 return (new Function('return ' + str))();
             } catch (err) {
-                // qm_trace("ERROR-qm_json-Function message: " + e.message);
+                qm_trace("ERROR-qm_json-Function message: " + e.message);
                 throw new SyntaxError('FAILED-qm_json');
                 // Method 3: json2.js
             }
@@ -254,7 +253,7 @@ function qm_is_aborting() {
         try {
             return qm_abort.handle.IsAborting();
         } catch (e) {
-            // qm_trace("ERROR-qm_is_aborting message: " + e.message);
+            qm_trace("ERROR-qm_is_aborting message: " + e.message);
             qm_abort.isvalid = false;
         }
     }
@@ -267,27 +266,26 @@ function qm_trace(str) {
     }
 }
 
-function qm_generate_translation(plain, translation) {
+function qm_generate_translation(plain, translation) {    
     var arr_plain = plain.split("\n");
     var arr_translation = translation.split("\n");
     var translated_lyrics = "";
     for (var i = translation.indexOf("kana") == -1 ? 5 : 6; i < arr_plain.length; i++) {
-        translated_lyrics += arr_plain[i] + "\r\n";
+        translated_lyrics += arr_plain[i] + "\n";
         var timestamp = "";
         if (i < arr_plain.length - 1) {
-            timestamp = arr_translation[i + 1].substr(0, 10);
+            timestamp = format_time(to_millisecond(arr_plain[i + 1].substr(1, 8)) - 15);
         }
         else {
-            timestamp = "[" + format_time(to_millisecond(arr_translation[i].substr(1, 8)) + 1000) + "]";
+            timestamp = format_time(to_millisecond(arr_plain[i].substr(1, 8)) + 5000);
         }
         if (arr_translation[i] == "腾讯享有本翻译作品的著作权" || arr_translation[i].indexOf("//") != -1) {
 
-            translated_lyrics += timestamp + arr_translation[i].substring(10).replace("//", "　　") + "\r\n";
+            translated_lyrics += timestamp + arr_translation[i].substring(10).replace("//", "　　") + "\n";
         } else {
-            translated_lyrics += timestamp + arr_translation[i].substring(10) + "\r\n";
+            translated_lyrics += timestamp + arr_translation[i].substring(10) + "\n";
         }
     }
-
     return translated_lyrics;
 }
 
@@ -301,7 +299,7 @@ function qm_generate_single_line(plain) {
             timestamp = arr_plain[i + 1].substr(0, 10);
         }
         else {
-            timestamp = "[" + format_time(to_millisecond(arr_plain[i].substr(1, 8)) + 1000) + "]";
+            timestamp = format_time(to_millisecond(arr_plain[i].substr(1, 8)) + 1000);
         }
         single_line_lyrics += timestamp + "　　" + "\r\n";
     }
@@ -327,6 +325,7 @@ function format_time(time) {
     var s = Math.floor(t);
     var ms = t - s;
     var str = (h ? zpad(h) + ":" : "") + zpad(m) + ":" + zpad(s) + "." + zpad(Math.floor(ms * 100));
+    str = "[" + str + "]";
     return str;
 }
 
