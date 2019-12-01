@@ -274,13 +274,12 @@ function qm_generate_translation(plain, translation) {
         translated_lyrics += arr_plain[i] + "\n";
         var timestamp = "";
         if (i < arr_plain.length - 1) {
-            timestamp = format_time(to_millisecond(arr_plain[i + 1].substr(1, 8)) - 15);
+            timestamp = format_time(to_millisecond(arr_plain[i + 1].substr(1, 8)) - 10);
         }
         else {
             timestamp = format_time(to_millisecond(arr_plain[i].substr(1, 8)) + 5000);
         }
         if (arr_translation[i] == "腾讯享有本翻译作品的著作权" || arr_translation[i].indexOf("//") != -1) {
-
             translated_lyrics += timestamp + arr_translation[i].substring(10).replace("//", "　　") + "\n";
         } else {
             translated_lyrics += timestamp + arr_translation[i].substring(10) + "\n";
@@ -308,7 +307,7 @@ function qm_generate_single_line(plain) {
 }
 
 function to_millisecond(timeString) {
-    return parseInt(timeString.slice(0, 2), 10) * 60000 + parseInt(timeString.substr(3, 2), 10) * 1000 + parseInt(timeString.substr(6, 2), 10);
+    return parseInt(timeString.slice(0, 2), 10) * 60000 + parseInt(timeString.substr(3, 2), 10) * 1000 + parseInt(timeString.substr(6, 2), 10) * 10;
 }
 
 function zpad(n) {
@@ -323,12 +322,15 @@ function format_time(time) {
     var m = Math.floor(t / 60);
     t -= m * 60;
     var s = Math.floor(t);
-    var ms = t - s;
-    var str = (h ? zpad(h) + ":" : "") + zpad(m) + ":" + zpad(s) + "." + zpad(Math.floor(ms * 100));
+    var ms = Math.round((t - s) * 100);
+    if (ms == 100) {
+        ms = 0;
+        s = s + 1;
+    }
+    var str = (h ? zpad(h) + ":" : "") + zpad(m) + ":" + zpad(s) + "." + zpad(ms);
     str = "[" + str + "]";
     return str;
 }
-
 
 // https://github.com/dankogai/js-base64
 // https://github.com/dankogai/js-base64/raw/master/base64.min.js
