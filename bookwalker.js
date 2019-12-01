@@ -1,9 +1,16 @@
-let func = 'b9b'; // viewer_image_2.0.10_2019-09-18.js
+// viewer_image_2.0.10_2019-09-18.js
+let func = 'b9b'; 
+// NFBR.a6G.Initializer.B2O.menu.model.get("viewerPage")
+// NFBR.a6G.Initializer.B2O.menu.a6l.moveToPage()
+
+// viewer_image_v0.1.10_2018-11-15.js
 if (window.location.href.includes('https://magazinewalker.jp/viewer'))
-    func = 'B0F'; // viewer_image_v0.1.10_2018-11-15.js
+    func = 'B0F'; 
+    // NFBR.a6G.Initializer.B0U.menu.model.get("viewerPage")
+    // NFBR.a6G.Initializer.B0U.menu.a6l.moveToPage()
 
-// From https://jixun.moe/intercept-bookwalker-tw-image
 
+    // From https://jixun.moe/intercept-bookwalker-tw-image
 const myCanvas1 = document.createElement('canvas');
 const myCanvas2 = document.createElement('canvas');
 const backup = window.NFBR.a6G.a5x.prototype[func];
