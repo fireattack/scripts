@@ -1,13 +1,16 @@
 // viewer_image_2.0.10_2019-09-18.js
 let func = 'b9b'; 
-// NFBR.a6G.Initializer.B2O.menu.model.get("viewerPage")
-// NFBR.a6G.Initializer.B2O.menu.a6l.moveToPage()
+
+// 几个有用的function From https://bgm.tv/group/topic/350167
+    // NFBR.a6G.Initializer.B0U.menu.model.get("viewerPage")
+    // NFBR.a6G.Initializer.B0U.menu.a6l.moveToPage()
+
 
 // viewer_image_v0.1.10_2018-11-15.js
 if (window.location.href.includes('https://magazinewalker.jp/viewer'))
     func = 'B0F'; 
-    // NFBR.a6G.Initializer.B0U.menu.model.get("viewerPage")
-    // NFBR.a6G.Initializer.B0U.menu.a6l.moveToPage()
+// NFBR.a6G.Initializer.B2O.menu.model.get("viewerPage")
+// NFBR.a6G.Initializer.B2O.menu.a6l.moveToPage()
 
 
     // From https://jixun.moe/intercept-bookwalker-tw-image
