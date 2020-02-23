@@ -266,11 +266,29 @@ function qm_trace(str) {
     }
 }
 
-function qm_generate_translation(plain, translation) {    
+function qm_generate_translation(plain, translation) {
     var arr_plain = plain.split("\n");
     var arr_translation = translation.split("\n");
     var translated_lyrics = "";
-    for (var i = translation.indexOf("kana") == -1 ? 5 : 6; i < arr_plain.length; i++) {
+    var first_line = 0;
+    var offset = 0;
+
+    for (var i = 0; i < arr_plain.length; i++) {
+        if (arr_plain[i].search(/^\[\d\d/) === 0) {
+            first_line = i;
+            break;
+        }
+    }
+    for (var i = 0; i < arr_translation.length; i++) {
+        if (arr_translation[i].search(/^\[\d\d/) === 0) {
+            offset = i - first_line;
+            break;
+        }
+    }
+    
+    for (var i = first_line; i < arr_plain.length; i++) {
+        if (arr_plain[i].search(/^\[\d\d/) === -1)
+            break;
         translated_lyrics += arr_plain[i] + "\n";
         var timestamp = "";
         if (i < arr_plain.length - 1) {
@@ -279,10 +297,10 @@ function qm_generate_translation(plain, translation) {
         else {
             timestamp = format_time(to_millisecond(arr_plain[i].substr(1, 8)) + 5000);
         }
-        if (arr_translation[i] == "腾讯享有本翻译作品的著作权" || arr_translation[i].indexOf("//") != -1) {
-            translated_lyrics += timestamp + arr_translation[i].substring(10).replace("//", "　　") + "\n";
+        if (arr_translation[i+offset].indexOf("腾讯享有本翻译作品的著作权") != -1 || arr_translation[i+offset].indexOf("//") != -1) {
+            translated_lyrics += timestamp + "　　\n"; // Remove useless content
         } else {
-            translated_lyrics += timestamp + arr_translation[i].substring(10) + "\n";
+            translated_lyrics += timestamp + arr_translation[i+offset].substring(10) + "\n";
         }
     }
     return translated_lyrics;
