@@ -67,8 +67,10 @@ function start_search(info, callback) {
         if (qm_is_aborting()) {
             break;
         }
+        // Get first CV's name
+        var artist = info.Artist.replace(/.+?[(（]CV[.:：] *(.+?)[)）].*/, '$1');  
         json_text = qm_download(QM_CFG.S_SRV,
-            "w=" + qm_normalize(info.Title) + "+" + qm_normalize(info.Artist)
+            "w=" + qm_normalize(info.Title) + "+" + qm_normalize(artist)
             + "&p=" + (page + 1)
             + "&n=" + QM_CFG.P_NUM
             + "&new_json=1&cr=1"

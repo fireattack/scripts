@@ -17,6 +17,11 @@ ESLyric作者原始脚本：https://drive.google.com/drive/folders/0B2KhsZAUDf9C
 * By cimoc @ sokka
 * Source: unknown
 
+### Mod: [qqmusic_plus_mod_by_fireattack.ks](qqmusic_plus_mod_by_fireattack.js)
+
+* By me
+* Fixed some major bugs (like wrong tranlation timestamp etc.). Recommanded.
+
 ## 网易云音乐
 
 ### ncm.js
