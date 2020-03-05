@@ -116,14 +116,14 @@ function start_search(info, callback) {
                         if (lyric.trans.length > 128) {
                             new_lyric.Source = get_my_name() + " (含翻译)";
                             new_lyric.LyricText = qm_generate_translation(Base64.decode(lyric.lyric), Base64.decode(lyric.trans));
-                            callback.AddLyric(new_lyric);
                         } else {
                             if (!dual_line) {
                                 new_lyric.LyricText = qm_generate_single_line(Base64.decode(lyric.lyric));
                             } else {
-                                new_lyric.LyricText = Base64.decode(lyric.lyric);                                
+                                new_lyric.LyricText = Base64.decode(lyric.lyric);
                             }
-                        }
+                            
+                        }                        
                         callback.AddLyric(new_lyric);
                         count++;
                     }
