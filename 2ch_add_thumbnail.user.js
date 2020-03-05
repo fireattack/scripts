@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch(5ch) image show thumbnail
 // @namespace    http://tampermonkey.net/
-// @version      2.1
+// @version      2.2
 // @description  2(5)ちゃんねるに貼られている画像のサムネイルを表示します。
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
@@ -13,6 +13,8 @@
 // @grant        none
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js
 // ==/UserScript==
+
+// Original: https://greasyfork.org/scripts/25165
 
 function addThumb() {
   $('a').each(function () {
