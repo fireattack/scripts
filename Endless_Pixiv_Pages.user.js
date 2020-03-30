@@ -3,7 +3,7 @@
 // @namespace      https://greasyfork.org/scripts/3254
 // @include        *://www.pixiv.net/*
 // @description    Loads more pixiv pages as you scroll down.
-// @version        2018.01.28
+// @version        2020.03.31
 // @grant          none
 // ==/UserScript==
 
@@ -217,7 +217,7 @@ function processPage( newDoc )
     let rawItems = newTable.getAttribute("data-items") || ( newTable.nextElementSibling && newTable.nextElementSibling.getAttribute("data-items") );
     if( rawItems ) try
     {
-        let lazyDivs = newTable.querySelectorAll('div > a > div.js-lazyload, div > a > div.lazyloaded');//Only actually expecting 'js-lazyload'; only the initial page uses 'lazyloaded'.
+        let lazyDivs = newTable.querySelectorAll('div > a > div:last-child');
         let jsonItems = JSON.parse(rawItems);
         if( lazyDivs.length == jsonItems.length )
             for( let i = 0; i < lazyDivs.length; i++ )
