@@ -7,6 +7,9 @@
 // @grant          none
 // ==/UserScript==
 
+// Original: https://greasyfork.org/en/scripts/3254-endless-pixiv-pages
+// Just some minor fix
+
 var iframeLoader = false;//If true, force all pages to be loaded using a hidden iframe instead of XMLHttpRequest.
 var scrollBuffer = 500;//Minimum height remaining to scroll before loading the next page.
 var timeToFailure = 30;//Seconds to wait for a response from the next page before attempting to fetch the page again.
