@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch(5ch) image show thumbnail
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.3
 // @description  2(5)ちゃんねるに貼られている画像のサムネイルを表示します。
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
@@ -21,7 +21,8 @@ function addThumb() {
     if ($(this).hasClass('done')) return;
     var address = $(this).text();
     var ext = address.split('.').pop();
-    if (ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "gif" || ext == "bmp" || ext == "jpg:large" || ext == "jpeg:large" || ext == "png:large") {
+    var exts = ["jpg", "jpeg", "png", "gif", "bmp"];
+    if (exts.includes(ext.toLowerCase().replace(":large", '').replace(':orig', ''))) {
       $(this).after($('</br><a href=' + address + ' target="_blank"><img src=' + address + ' width=400/></a></br>'));
       $(this).addClass('done');
     }
