@@ -27,7 +27,7 @@ var bracket = [
 ];
 
 //修复newtype歌词保存 翻译提前秒数 设为0则取消 如果翻译歌词跳的快看的难过,蕴情设为0.4-1.0
-var savefix = 0.05;
+var savefix = 0.03;
 //new_merge歌词翻译时间轴滞后秒数，防闪
 var timefix = 0.01;
 //当timefix有效时设置offset(毫秒),防闪
@@ -40,14 +40,14 @@ const http = require('http');
 var newLyric = {};
 var callback = {
     AddLyric: function (s) {
-        console.log(s.LyricText);
+        // console.log(s.LyricText);
     }
     
 }
 
 info = {
-    Title: 'Sunset カンフー',
-    Artist: 'TrySail'
+    Title: 'ワタシノテンシ feat. 成海聖奈(CV：雨宮天)',
+    Artist: 'HoneyWorks'
 }
 
 start_search(info, callback);
@@ -311,38 +311,19 @@ function lrc_merge(olrc, tlrc) {
 function lrc_newtype(olrc, tlrc, merge_type) {
     olrc = olrc.split("\n");
     tlrc = tlrc.split("\n");
-    /*
-    var o_f = olrc[0].indexOf("[by:");
-    if (o_f == 0) {
-        var o_b = olrc[0].indexOf("]");
-        var o = (o_f != -1 && o_b != -1) ? olrc[0].substring(4, o_b) : "";
 
-        var t_f = tlrc[0].indexOf("[by:");
-        var t_b = tlrc[0].indexOf("]");
-        var t = (t_f != -1 && t_b != -1) ? olrc[0].substring(4, o_b) : "";
-        olrc[0] = "[by:" + o + "/译:" + t + "]";
-    }
-    */
-    for (var ii = 5, set = 0, counter; ii < 10; ii++) { //玄学取set...
-        counter = olrc[ii].indexOf("]");
-        debug && console.log(ii + ':' + counter);
-        counter = (counter == -1) ? 9 : counter;
-        set += counter;
-    }
-    set = Math.round(set / 5);
-    debug && console.log("set:" + set);
     var i = 0;
     var l = tlrc.length;
     var lrc = new Array();
     var r = new Array();
-    for (var k in olrc) {
-        var a = olrc[k].substring(1, set);
+    for (var k in olrc) {        
+        var a = olrc[k].substring(1, olrc[k].indexOf("]"));
         if (i >= l) break; //防溢出数组
         var j = 0;
         var tf = 0; //标记变量,时间轴符合置1
         while (j < 5) {
             if (i + j >= l) break; //防溢出数组
-            var b = tlrc[i + j].substring(1, set);
+            var b = tlrc[i + j].substring(1, tlrc[i + j].indexOf("]"));
             if (a == b) {
                 tf = 1;
                 i += j;
@@ -361,82 +342,75 @@ function lrc_newtype(olrc, tlrc, merge_type) {
 
     if (merge_type) {
         for (var kk = 0; kk < l_r; kk++) {
-            o = r[kk][0];
-            t = r[kk][1];
-            var o_lrc = olrc[o].substr(set + 1);
+            var o = r[kk][0];
+            var t = r[kk][1];
+            var o_lrc = olrc[o].substr(olrc[0].indexOf("]") + 1);
             o_lrc = o_lrc ? olrc[o] : "[" + r[kk][2] + "]  ";
             lrc.push(o_lrc);
-            var t_lrc = t !== false && tlrc[t].substr(set + 1) ? bracket[0] + tlrc[t].substr(set + 1) + bracket[1] : " ";
+            var t_lrc = t !== false && tlrc[t].substr(tlrc[t].indexOf("]") + 1) ? bracket[0] + tlrc[t].substr(tlrc[t].indexOf("]") + 1) + bracket[1] : " ";
             if (kk + 2 > l_r) break;
+            var time;
             if (r[kk + 1][2]) {
-                var timeb = r[kk + 1][2].replace(/(])/, "");
-
-                if (savefix) {
-                    var x = parseInt(timeb.substr(0, 2));
-                    var y = parseFloat(timeb.substr(3, set - 4));
-                    var ut = x * 60 + y - savefix;
-                    var time = "[" + prefix(Math.floor(ut / 60), 2) + ":" + prefix((ut % 60).toFixed(2), 5) + "]";
-                    debug && console.log(time);
-                } else var time = "[" + timeb + "]";
-            } else {
-                var x = parseInt(r[kk][2].substr(0, 2));
-                var y = parseInt(r[kk][2].substr(3, 2));
-                var z = r[kk][2].substr(5, 3);
-                var ut = x * 60 + y + 4;
-                var time = "[" + prefix(Math.floor(ut / 60), 2) + ":" + prefix((ut % 60).toFixed(2), 5) + "]";
-                debug && console.log(time);
+                var timeb = r[kk + 1][2];
+                var interval = savefix ? parseInt(savefix*1000) : 0;
+                time = format_time(to_millisecond(timeb) - interval); //minus
+            } else {                
+                time = format_time(to_millisecond(r[kk][2]) + 4);
             }
-
             lrc.push(time + t_lrc);
         }
     } else {
         if (timefix && offset) lrc.push("[offset:" + offset + "]");
         for (var kk = 0; kk < l_r; kk++) {
-            o = r[kk][0];
-            t = r[kk][1];
-            var o_lrc = olrc[o].substr(set + 1);
+            var o = r[kk][0];
+            var t = r[kk][1];
+            var o_lrc = olrc[o].substr(olrc[o].indexOf("]") + 1);
             o_lrc = o_lrc ? olrc[o] : "[" + r[kk][2] + "]  "; //重要：空格
-            var t_lrc = t !== false && tlrc[t].substr(set + 1) ? bracket[0] + tlrc[t].substr(set + 1) + bracket[1] : " ";
+            var t_lrc = t !== false && tlrc[t].substr(tlrc[t].indexOf("]") + 1) ? bracket[0] + tlrc[t].substr(tlrc[t].indexOf("]") + 1) + bracket[1] : " ";
             if (kk + 2 > l_r) break;
             if (r[kk + 1][2]) {
-                var timeb = r[kk + 1][2].replace(/(])/, "");
-                debug && console.log("timeb=" + timeb);
-
-                if (timefix) {
-                    var x = parseInt(timeb.substr(0, 2));
-                    var y = parseFloat(timeb.substr(3, set - 4));
-                    var ut = x * 60 + y + timefix;
-                    var time = "[" + prefix(Math.floor(ut / 60), 2) + ":" + prefix((ut % 60).toFixed(2), 5) + "]";
-                    debug && console.log("time=" + time);
-                } else {
-                    var time = "[" + timeb + "]";
-                }
+                var timeb = r[kk + 1][2];
+                var interval = timefix ? parseInt(timefix*1000) : 0;
+                var time = format_time(to_millisecond(timeb) - interval); //minus   
                 lrc.push(o_lrc + " " + time + t_lrc);
             } else {
-                var x = parseInt(r[kk][2].substr(0, 2));
-                var y = parseInt(r[kk][2].substr(3, 2));
-                var z = r[kk][2].substr(5, 3);
-                var ut = x * 60 + y + 4;
-                var time = "[" + prefix(Math.floor(ut / 60), 2) + ":" + prefix((ut % 60).toFixed(2), 5) + "]";
+                var time = format_time(to_millisecond(r[kk][2]) + 4);
                 lrc.push(o_lrc + " " + time + t_lrc);
                 lrc.push(time + "-End-");
-                debug && console.log(time);
             }
             debug && console.log(o_lrc + time + t_lrc);
 
         }
-
-
     }
-
-
     debug && console.log("lyric length:" + lrc.length);
     return lrc.join("\n");
 
 }
 
-function prefix(num, length) {
-    return (Array(length).join('0') + num).slice(-length);
+function to_millisecond(timeString) {
+    return parseInt(timeString.slice(0, 2), 10) * 60000 + parseInt(timeString.substr(3, 2), 10) * 1000 + parseInt(timeString.substr(6, 2), 10) * 10;
+}
+
+function format_time(time) {
+    var t = Math.abs(time / 1000);
+    var h = Math.floor(t / 3600);
+    t -= h * 3600;
+    var m = Math.floor(t / 60);
+    t -= m * 60;
+    var s = Math.floor(t);
+    var ms = Math.round((t - s) * 100);
+    if (ms == 100) {
+        ms = 0;
+        s = s + 1;
+    }
+    var str = (h ? zpad(h) + ":" : "") + zpad(m) + ":" + zpad(s) + "." + zpad(ms);
+    str = "[" + str + "]";
+    return str;
+}
+
+function zpad(n) {
+    var s = n.toString();
+    return (s.length < 2) ? "0" + s : s;
 }
 
 function json(text) {
