@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch(5ch) image show thumbnail
 // @namespace    http://tampermonkey.net/
-// @version      2.3
+// @version      2.4
 // @description  2(5)ちゃんねるに貼られている画像のサムネイルを表示します。
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
@@ -28,30 +28,15 @@ function addThumb() {
     }
   });
 
-  $(".thumb_i").each(function () {
-    $(this).hide();
-  });
+  $(".thumb_i").hide();
 }
 
-addThumb(); // Add once first so our condition later is true initially
-
-var target = document.querySelector('body > dl');
-
-// create an observer instance
+addThumb();
+var target = document.querySelector('body');
 var observer = new MutationObserver(function (mutations, ob) {
   mutations.forEach(function (mutation) {
-    if (!document.querySelector('picture > a > img')) {
-      addThumb();
-    }
+    addThumb();
   });
 });
-
-// configuration of the observer:
-var config = {
-  attributes: true,
-  childList: true,
-  characterData: true
-};
-
-// pass in the target node, as well as the observer options
+var config = { attributes: true, childList: true, characterData: true };
 observer.observe(target, config);
