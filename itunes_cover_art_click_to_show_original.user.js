@@ -1,38 +1,44 @@
 // ==UserScript==
 // @name         iTunes Cover Art Click to Show Original
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.22
+// @version      0.5
 // @description  Click on cover art to get original largest PNG image.
 // @author       fireattack
 // @match        *://itunes.apple.com/*/album/*
 // @match        *://music.apple.com/*/album/*
 // ==/UserScript==
 
-$('head').append('<style>.we-artwork::before{display:none !important;}</style>'); // Remove cover art css blocking.
-
 function addLink() {
-    var img = $('picture img').first();
-    var url = img.attr('src').replace(/(.+)\/\d+x0w\.jpg/, '$1/999999999x0w.png');
-    img.wrap("<a href='" + url + "' </a>");
+    console.log('Trying to add link!');
+    var img = document.querySelector('picture img, .product-info img.media-artwork-v2__image');
+    console.log(img);
+    if (!img) return;
+    var url = '';
+    if (img['srcset']) {
+        url = img['srcset'].split(' ')[0];
+    } else {
+        url = img['src'];
+    }
+    url = url.replace(/\/[0-9]*x[0-9]*[a-z]*(?:-[0-9]+)?(\.[^/.]*)$/, "/999999999x0w-999.png");
+    img.style.width = "100%";
+    img.style.height = "auto";
+    img.style.cursor = 'pointer';
+    img.outerHTML = "<a href='" + url + "' target='_blank'>" + img.outerHTML + "</a>";
+    var link = document.querySelector('picture img, div.product-info img.media-artwork-v2__image').parentNode;
+    console.log(link);
+    link.onclick = function (e) {
+        e.stopPropagation();
+    };
 }
 
-addLink(); // Add once first so our condition later is true initially
+addLink();
 
-var target = document.querySelector('body');
-
-// create an observer instance
-var observer = new MutationObserver(function(mutations, ob) {
-    mutations.forEach(function(mutation) {
-      if(!document.querySelector('picture > a > img')) {
-          console.log('It seems our <a> got removed, re-adding..');
-          addLink();
-          ob.disconnect(); // Optional; it looks like the node will only be overriden once, so we can disconnect the ob afterwards.
-      }
+var target = document.querySelector('html'); //div.page-container
+var observer = new MutationObserver(function (mutations, ob) {
+    mutations.forEach(function (mutation) {
+            addLink();
     });
 });
 
-// configuration of the observer:
-var config = { attributes: true, childList: true, characterData: true };
-
-// pass in the target node, as well as the observer options
+var config = { attributes: true, childList: true, characterData: true, subtree: false };
 observer.observe(target, config);
