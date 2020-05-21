@@ -102,9 +102,13 @@ var readURL = localStorage.getItem('readURL');
 if (window.location.href === readURL) {
   foldRead(readId);
   scroll(readId); 
-  // $('button#btGoTop').click(function (e) {
-  //   scroll(readId);
-  //   e.stopPropagation();
-  // });
+
+  //Override top button
+  $('button#btGoTop').click(function (e) {
+     scroll(readId);
+     e.stopPropagation();
+  });
 }
 addThumb();
+
+//history.scrollRestoration = "manual"; // Use this if you don't want browser to retain the scr. pos.
