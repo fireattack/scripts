@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3
+// @version      3.1
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
 // @match        https://*.5ch.net/*
@@ -58,9 +58,10 @@ function foldRead(readId) {
 
 function setReadProgress() {
   let oldId = Number(localStorage.getItem('readId'));
+  let oldURL = localStorage.getItem('readURL');  
   let newestId = Number($('div.post').last().attr('id'));
   let url = window.location.href;
-  if (!oldId || newestId > oldId) {
+  if (!oldURL || url !== oldURL || !oldId || newestId > oldId) {
     localStorage.setItem('readId', newestId);
     localStorage.setItem('readURL', url);
     label.innerHTML = `Your last progress is: <b>${newestId}</b>`;
