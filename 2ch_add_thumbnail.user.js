@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.1
+// @version      3.2
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
 // @match        https://*.5ch.net/*
@@ -76,7 +76,7 @@ function addThumb() {
       var address = $(this).text();
       var ext = address.split('.').pop();
       var exts = ["jpg", "jpeg", "png", "gif", "bmp"];
-      if (exts.includes(ext.toLowerCase().replace(":large", '').replace(':orig', ''))) {
+      if (address.endsWith('media?size=l') || exts.includes(ext.toLowerCase().replace(":large", '').replace(':orig', ''))) {
         $(this).after($('</br><a href=' + address + ' target="_blank"><img src=' + address + ' width=400/></a></br>'));
         $(this).addClass('done');
       }
