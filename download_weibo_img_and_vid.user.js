@@ -2,7 +2,7 @@
 // @name         下载微博图片和视频
 // @name:en   Download Weibo Images and Video
 // @namespace    https://greasyfork.org/zh-CN/users/127123-flao
-// @version      1.5.3r
+// @version      1.6
 // @description  一键下载一条微博中的图片，文件名包含该微博的路径．xxx_wb_uid_wid，可恢复为 https://weibo.com/uid/wid
 // @description:en Download images from weibo with user-id and weibo-id in its filename. filname format xxx_wb_uid_wid
 // @author       Flao (slightly modified by fireattack)
@@ -15,15 +15,16 @@
 // ==/UserScript==
 
 
-var doDownload = function (blob, filename) {
+var doDownload = function (blob, filename) {    
     var a = document.createElement('a');
     a.download = filename;
     a.href = blob;
     a.click();
+    console.log(`Download ${filename} sucessful!`);
 }
 
 // Current blob size limit is around 500MB for browsers
-var download = function (url, filename) {
+var download = function (url, filename, delay = 0) {
     console.log('downloading ' + url);
     if (!filename) filename = url.split('\\').pop().split('/').pop();
     GM_xmlhttpRequest({
@@ -33,7 +34,9 @@ var download = function (url, filename) {
         onload: function(e) {
             var blob = e.response;
             let blobUrl = window.URL.createObjectURL(blob);
-            doDownload(blobUrl, filename);
+            setTimeout(() => {
+                doDownload(blobUrl, filename);
+            }, delay);            
         }
     });
     return true;
@@ -110,10 +113,10 @@ var buttonOnClick = function (e) {
         // check whether picture or gif
         if (child.tagName === 'IMG') {
             imgsrc = child.src.replace(imgPathReg, '$1large$3'); // replace ....sinaming.cn/XXX/YYY.jpg' with '...sinaimg.cn/large/YYY.jpg'
-            result = download(imgsrc, fileName + '_' + j);
+            result = download(imgsrc, fileName + '_' + j, j * 100);
         } else {
             imgsrc = child.children[0].src.replace(imgPathReg, '$1large$3');
-            result = download(imgsrc, fileName + '_' + j + '.gif');
+            result = download(imgsrc, fileName + '_' + j + '.gif', j * 100);
         }
         if (result === false) failedList.push(j + 1);
     }
