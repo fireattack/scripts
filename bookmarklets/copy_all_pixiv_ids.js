@@ -7,7 +7,7 @@ const copyToClipboard = str => {
     document.body.removeChild(el);
 };
 var IDs = [];
-for (var a of document.querySelectorAll('a')) {
+for (var a of document.querySelectorAll('section a')) {
     if (/artworks\/\d+/.test(a.href)) {
         IDs.push(a.href.match(/artworks\/(\d+)/)[1]);        
     }
