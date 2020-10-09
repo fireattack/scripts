@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer
 // @namespace    http://tampermonkey.net/
-// @version      4.0
+// @version      5.0
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
 // @match        https://*.5ch.net/*
@@ -31,34 +31,41 @@ GM_addStyle(`
     margin: 0 0 5px;
     display: block;
 }
+
+.folded {
+  padding: 0px !important;
+}
+
+.folded > .message {
+  display: none !important;
+}
 `);
 
 
 function scroll(readId){
+  if (!readId) return;
   $([document.documentElement, document.body]).animate({
     scrollTop: $(`#${readId}`).offset().top
   }, 0);
 }
 
-function foldRead(readId) {
-  function fold(ele) {
-    $(ele).addClass('folded');
-    $('.meta', ele).click(() => {
-      $('.message', ele).toggle();
-    })
-    $('.message', ele).hide();
-  }
+function foldPosts(readId) {
   let existingContent = [];
   $('div.post').each(function () {
+    $('.meta', this).click(() => {
+      $(this).toggleClass('folded');
+    });
+    $('.meta > span.name a', this).removeAttr("href");
+
     let id = Number($(this).attr('id'));
     let text = $('.message', this).text();
     if (readId && id <= readId) {
-      console.log('fold '+id + ' because it is read.');
-      fold(this);
+      // console.log('fold '+id + ' because it is read.');
+      $(this).addClass('folded');
     } else {
       if (existingContent.includes(text)) {
-        console.log('fold '+id + ' because it is dupe.');
-        fold(this);
+        // console.log('fold '+id + ' because it is dupe.');
+        $(this).addClass('folded');
       } else {
         existingContent.push(text);
       }
@@ -109,18 +116,18 @@ myBtn.onclick = () => {
 };
 myDiv.appendChild(myBtn);
 
-var readId = Number(localStorage.getItem('readId'));
 var readURL = localStorage.getItem('readURL');
-if (window.location.href === readURL) {
-  foldRead(readId);
-  scroll(readId); 
-
-  //Override top button
-  $('button#btGoTop').click(function (e) {
+var readId = Number(localStorage.getItem('readId'));
+if (window.location.href !== readURL) readId = 0; //If not the same post, doesn't count.
+foldPosts(readId); //Fold both read posts and duplicates
+if (window.location.href === readURL) { //Scroll to last read
+  scroll(readId);  
+  $('button#btGoTop').click(function (e) { //Override top button as well
      scroll(readId);
      e.stopPropagation();
   });
 }
+
 addThumb();
 
 //history.scrollRestoration = "manual"; // Use this if you don't want browser to retain the scr. pos.
