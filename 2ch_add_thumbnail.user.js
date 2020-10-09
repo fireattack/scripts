@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer
 // @namespace    http://tampermonkey.net/
-// @version      3.2
+// @version      4.0
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
 // @match        https://*.5ch.net/*
@@ -40,20 +40,31 @@ function scroll(readId){
   }, 0);
 }
 
-function foldRead(readId) {  
-  if (readId) {
-    $('div.post').each(function () {
-      let id = Number($(this).attr('id'));
-      if (id <= readId) {
-        $(this).addClass('folded');
-        $('.meta', this).click(() => { //Use arrow func so `this` is kept
-          $('.message', this).toggle();
-        })
-        $('.message', this).hide();
-      }
-    });
-    label.innerHTML = `Your last progress is: <b>${readId}</b>`;
+function foldRead(readId) {
+  function fold(ele) {
+    $(ele).addClass('folded');
+    $('.meta', ele).click(() => {
+      $('.message', ele).toggle();
+    })
+    $('.message', ele).hide();
   }
+  let existingContent = [];
+  $('div.post').each(function () {
+    let id = Number($(this).attr('id'));
+    let text = $('.message', this).text();
+    if (readId && id <= readId) {
+      console.log('fold '+id + ' because it is read.');
+      fold(this);
+    } else {
+      if (existingContent.includes(text)) {
+        console.log('fold '+id + ' because it is dupe.');
+        fold(this);
+      } else {
+        existingContent.push(text);
+      }
+    }
+  });
+  if (readId) label.innerHTML = `Your last progress is: <b>${readId}</b>`;
 }
 
 function setReadProgress() {
