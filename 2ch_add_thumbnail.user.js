@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      5.1
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
 // @match        https://*.5ch.net/*
@@ -42,7 +42,7 @@ GM_addStyle(`
 `);
 
 
-function scroll(readId){
+function scroll(readId) {
   if (!readId) return;
   $([document.documentElement, document.body]).animate({
     scrollTop: $(`#${readId}`).offset().top
@@ -76,7 +76,7 @@ function foldPosts(readId) {
 
 function setReadProgress() {
   let oldId = Number(localStorage.getItem('readId'));
-  let oldURL = localStorage.getItem('readURL');  
+  let oldURL = localStorage.getItem('readURL');
   let newestId = Number($('div.post').last().attr('id'));
   let url = window.location.href;
   if (!oldURL || url !== oldURL || !oldId || newestId > oldId) {
@@ -94,7 +94,7 @@ function addThumb() {
       var address = $(this).text();
       var ext = address.split('.').pop();
       var exts = ["jpg", "jpeg", "png", "gif", "bmp"];
-      if (address.endsWith('media?size=l') || exts.includes(ext.toLowerCase().replace(":large", '').replace(':orig', ''))) {
+      if (address.includes('twimg.com') || exts.includes(ext.toLowerCase().replace(":large", '').replace(':orig', ''))) {
         $(this).after($('</br><a href=' + address + ' target="_blank"><img src=' + address + ' width=400/></a></br>'));
         $(this).addClass('done');
       }
@@ -121,10 +121,10 @@ var readId = Number(localStorage.getItem('readId'));
 if (window.location.href !== readURL) readId = 0; //If not the same post, doesn't count.
 foldPosts(readId); //Fold both read posts and duplicates
 if (window.location.href === readURL) { //Scroll to last read
-  scroll(readId);  
+  scroll(readId);
   $('button#btGoTop').click(function (e) { //Override top button as well
-     scroll(readId);
-     e.stopPropagation();
+    scroll(readId);
+    e.stopPropagation();
   });
 }
 
