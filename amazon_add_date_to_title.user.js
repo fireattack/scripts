@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon Add date to title
 // @namespace    https://twitter.com/ikenaikoto
-// @version      0.1
+// @version      0.2
 // @description  Add release date to title on Amazon.
 // @author       fireattack
 // @match        https://www.amazon.co.jp/*
@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    var info = document.querySelector('#detail_bullets_id').innerHTML;
+    var info = document.querySelector('#detailBullets_feature_div').innerHTML;
     if (info) {
         var re = /\d{4}\/\d{1,2}\/\d{1,2}/;
         var date = info.match(re)[0];
