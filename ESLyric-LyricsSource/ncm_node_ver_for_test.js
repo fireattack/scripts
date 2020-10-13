@@ -13,6 +13,7 @@
 //更改lrc_order内标识顺序,设置歌词输出顺序,删除即不获取
 //newtype:并列合并,tran:翻译,origin:原版歌词,old_merge:并排合并歌词
 var lrc_order = [
+    // "origin",
     "newtype"
 ];
 
@@ -40,14 +41,14 @@ const http = require('http');
 var newLyric = {};
 var callback = {
     AddLyric: function (s) {
-        // console.log(s.LyricText);
+        console.log(s.LyricText);
     }
     
 }
 
 info = {
-    Title: 'ワタシノテンシ feat. 成海聖奈(CV：雨宮天)',
-    Artist: 'HoneyWorks'
+    Title: '明日への扉',
+    Artist: '高橋未奈美'
 }
 
 start_search(info, callback);
@@ -344,7 +345,7 @@ function lrc_newtype(olrc, tlrc, merge_type) {
         for (var kk = 0; kk < l_r; kk++) {
             var o = r[kk][0];
             var t = r[kk][1];
-            var o_lrc = olrc[o].substr(olrc[0].indexOf("]") + 1);
+            var o_lrc = olrc[o].substr(olrc[o].indexOf("]") + 1);
             o_lrc = o_lrc ? olrc[o] : "[" + r[kk][2] + "]  ";
             lrc.push(o_lrc);
             var t_lrc = t !== false && tlrc[t].substr(tlrc[t].indexOf("]") + 1) ? bracket[0] + tlrc[t].substr(tlrc[t].indexOf("]") + 1) + bracket[1] : " ";

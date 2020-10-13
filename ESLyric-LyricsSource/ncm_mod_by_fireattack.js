@@ -351,7 +351,7 @@ function lrc_newtype(olrc, tlrc, merge_type) {
         for (var kk = 0; kk < l_r; kk++) {
             o = r[kk][0];
             t = r[kk][1];
-            var o_lrc = olrc[o].substr(olrc[0].indexOf("]") + 1);
+            var o_lrc = olrc[o].substr(olrc[o].indexOf("]") + 1);
             o_lrc = o_lrc ? olrc[o] : "[" + r[kk][2] + "]  ";
             lrc.push(o_lrc);
             var t_lrc = t !== false && tlrc[t].substr(tlrc[t].indexOf("]") + 1) ? bracket[0] + tlrc[t].substr(tlrc[t].indexOf("]") + 1) + bracket[1] : " ";
