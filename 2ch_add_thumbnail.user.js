@@ -139,7 +139,7 @@ if (window.location.href.includes('read.cgi')) {
   //history.scrollRestoration = "manual"; // Use this if you don't want browser to retain the scr. pos.
 } else if (window.location.href.includes('krsw.5ch.net/idolmaster')) {
   GM_addStyle(`
-  div.board_header,body > div:nth-child(5),body > div:nth-child(2),div.ADVERTISE_AREA {
+  div.board_header,body > div:nth-child(5),body > div:nth-child(2) > p,div.ADVERTISE_AREA {
     display: none;
   }
   `)
@@ -148,9 +148,9 @@ if (window.location.href.includes('read.cgi')) {
   $('body > div.THREAD_MENU > div > p').each(function(){
     if ($(this).text().includes('箱崎星梨花')){
       let newTitle = $('a:nth-child(2)', this).text();
-      let newThreadID = (newTitle.match(/\d+/)[0]);
-      let newURL = $('a:nth-child(1)', this)[0].href.replace(/\/l50$/, '');
-      if (newThreadID > lastThreadID)        
+      let newThreadID = newTitle.match(/\d+/)[0];
+      let newURL = $('a:nth-child(1)', this)[0].href.replace(/l50$/, '');
+      if (newThreadID >= lastThreadID)
         $('body > div.HEADER_AREA > h3').append(`<span>&nbsp;&nbsp;&nbsp;&nbsp; New thread: <a href="${newURL}">${newTitle}</a></span>`)
       return false;
     }
