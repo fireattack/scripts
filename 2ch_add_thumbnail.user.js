@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer
 // @namespace    http://tampermonkey.net/
-// @version      5.3
+// @version      5.4
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
 // @match        https://*.5ch.net/*
@@ -147,9 +147,9 @@ if (window.location.href.includes('read.cgi')) {
   $('body > div.HEADER_AREA > h3').append(`<span>&nbsp;&nbsp;&nbsp;&nbsp; Last read: <a href="${readURL}">${readTitle} (${readId})</a></span>`)
   $('body > div.THREAD_MENU > div > p').each(function(){
     if ($(this).text().includes('箱崎星梨花')){
-      let newTitle = $('a:nth-child(2)', this).text();
+      let newTitle = $(this).text().replace(/\d+:\s+(.+)$/, '$1');
       let newThreadID = newTitle.match(/\d+/)[0];
-      let newURL = $('a:nth-child(1)', this)[0].href.replace(/l50$/, '');
+      let newURL = $('a', this)[0].href.replace(/l50$/, '');
       if (newThreadID >= lastThreadID)
         $('body > div.HEADER_AREA > h3').append(`<span>&nbsp;&nbsp;&nbsp;&nbsp; New thread: <a href="${newURL}">${newTitle}</a></span>`)
       return false;
