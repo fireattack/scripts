@@ -23,7 +23,7 @@
 var dual_line = true;
 
 var QM_CFG = {
-    DEBUG: false,
+    DEBUG: true,
     E_SRV: "http://y.qq.com/portal/player.html",
     S_SRV: "http://c.y.qq.com/soso/fcgi-bin/client_search_cp",
     L_SRV: "http://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg",
@@ -68,7 +68,8 @@ function start_search(info, callback) {
             break;
         }
         // Get first CV's name
-        var artist = info.Artist.replace(/.+?[(（]CV[.:：] *(.+?)[)）].*/, '$1');  
+        qm_trace('info.Artist is ' + info.Artist);
+        var artist = info.Artist.replace(/.+?[(（]CV[.:：] *(.+?)[)）].*/, '$1');
         json_text = qm_download(QM_CFG.S_SRV,
             "w=" + qm_normalize(info.Title) + "+" + qm_normalize(artist)
             + "&p=" + (page + 1)
@@ -97,7 +98,7 @@ function start_search(info, callback) {
                 for (j = 0, new_lyric.Artist = ""; j < song.data.song.list[i].singer.length; j++) {
                     new_lyric.Artist += (j === 0 ? "" : ",") + song.data.song.list[i].singer[j].title;
                 }
-                // qm_trace("INFO-start_search-new_lyric Title: " + new_lyric.Title + ", Album: " + new_lyric.Album + ", Artist: " + new_lyric.Artist);
+                qm_trace("INFO-start_search-new_lyric Title: " + new_lyric.Title + ", Album: " + new_lyric.Album + ", Artist: " + new_lyric.Artist);
                 new_lyric.Source = get_my_name();
                 json_text = qm_download(QM_CFG.L_SRV,
                     "songmid=" + song.data.song.list[i].mid
@@ -122,8 +123,7 @@ function start_search(info, callback) {
                             } else {
                                 new_lyric.LyricText = Base64.decode(lyric.lyric);
                             }
-                            
-                        }                        
+                        }
                         callback.AddLyric(new_lyric);
                         count++;
                     }
@@ -138,7 +138,7 @@ function start_search(info, callback) {
 }
 
 function qm_download(url, param) {
-    qm_trace("INFO-qm_download-url: " + url + ", param: " + param);
+    // qm_trace("INFO-qm_download-url: " + url + ", param: " + param);
     // retry several times at most
     var i = null, xml_text = null;
     for (i = 0; i < QM_CFG.RETRY; i++) {
@@ -169,6 +169,7 @@ function qm_download(url, param) {
         try {
             if (param) {
                 url += "?" + encodeURI(param);
+                // qm_trace(url);
             }
             if (qm_http.type == "u_c") {
                 qm_http.handle.addHttpHeader("Referer", QM_CFG.E_SRV);
@@ -269,6 +270,8 @@ function qm_trace(str) {
 }
 
 function qm_generate_translation(plain, translation) {
+    // qm_trace(plain);
+    // qm_trace(translation);
     var arr_plain = plain.split("\n");
     var arr_translation = translation.split("\n");
     var translated_lyrics = "";
@@ -287,7 +290,7 @@ function qm_generate_translation(plain, translation) {
             break;
         }
     }
-    
+
     for (var i = first_line; i < arr_plain.length; i++) {
         if (arr_plain[i].search(/^\[\d\d/) === -1)
             break;
@@ -299,10 +302,12 @@ function qm_generate_translation(plain, translation) {
         else {
             timestamp = format_time(to_millisecond(arr_plain[i].substr(1, 8)) + 5000);
         }
-        if (arr_translation[i+offset].indexOf("腾讯享有本翻译作品的著作权") != -1 || arr_translation[i+offset].indexOf("//") != -1) {
-            translated_lyrics += timestamp + "　　\n"; // Remove useless content
-        } else {
-            translated_lyrics += timestamp + arr_translation[i+offset].substring(10) + "\n";
+        if (i+offset <arr_translation.length -1) {
+            if (arr_translation[i+offset].indexOf("腾讯享有本翻译作品的著作权") != -1 || arr_translation[i+offset].indexOf("//") != -1) {
+                translated_lyrics += timestamp + "　　\n"; // Remove useless content
+            } else {
+                translated_lyrics += timestamp + arr_translation[i+offset].substring(10) + "\n";
+            }
         }
     }
     return translated_lyrics;
