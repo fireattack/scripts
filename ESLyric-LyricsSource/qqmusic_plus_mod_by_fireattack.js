@@ -322,12 +322,18 @@ function qm_generate_single_line(plain) {
         }
         single_line_lyrics += timestamp + "　　" + "\r\n";
     }
-
     return single_line_lyrics;
 }
 
 function to_millisecond(timeString) {
-    return parseInt(timeString.slice(0, 2), 10) * 60000 + parseInt(timeString.substr(3, 2), 10) * 1000 + parseInt(timeString.substr(6, 2), 10) * 10;
+    var _ = timeString.split('.');
+    var msString = _[1];
+    var ms = parseInt(msString, 10) * Math.pow(10, 3 - msString.length);
+    var times = _[0].split(':');
+    ms += parseInt(times.pop(), 10) * 1000;
+    ms += parseInt(times.pop(), 10) * 60000;
+    if (times.length > 0) ms += parseInt(times.pop(), 10) * 3600000;
+    return ms;
 }
 
 function zpad(n) {
