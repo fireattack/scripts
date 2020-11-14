@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         iTunes Cover Art Click to Show Original
 // @namespace    https://twitter.com/ikenaikoto
-// @version      1.0
+// @version      1.2
 // @description  Click on cover art to get original largest PNG image.
 // @author       fireattack
 // @match        *://itunes.apple.com/*/album/*
 // @match        *://music.apple.com/*/album/*
+// @match        *://music.apple.com/*/artist/*
 // ==/UserScript==
 
 const DEBUGGING = false;
@@ -24,7 +25,8 @@ function print() {
 
 function addLink() {
   print('Start!');
-  let picture = document.querySelector('picture');
+  observer.observe(document.querySelector('div.loading-inner'), config);
+  let picture = document.querySelector('div.product-info picture');
   if (!picture) return;
   let source = picture.querySelector('source');
   let url = '';
@@ -40,23 +42,24 @@ function addLink() {
   let thumbnail_url = '';
   if (img.src && !img.src.includes('1x1.gif')) {
     return;
-  } else if (img.currentSrc) {
+  } else if (img.currentSrc && !img.currentSrc.includes('1x1.gif')) {
     thumbnail_url = img.currentSrc;
   } else {
     thumbnail_url = url.replace("/999999999x0w-999.png", "/500x500bb.webp");
   }
-  
   print('Update img.src:', img.src, thumbnail_url);
   img.src = thumbnail_url;
 
-  img.outerHTML = "<a href='" + url + "' target='_blank'>" + img.outerHTML + "</a>";
-  let link = document.querySelector('picture img').parentNode; // get the link we just added using outerHTML
-  link.onclick = function (e) {
-    e.stopPropagation();
-  };
-  print('Added link to cover.');
-  observer.observe(document.querySelector('div.loading-inner'), config);
+  if (img.parentNode.nodeName !== "A") {
+    img.outerHTML = "<a href='" + url + "' target='_blank'>" + img.outerHTML + "</a>";
+    let link = document.querySelector('picture img').parentNode; // get the link we just added using outerHTML
+    link.onclick = function (e) {
+      e.stopPropagation();
+    };
+    print('Added link to cover.');
+  }
 }
 
 observer.observe(target, config);
+observer.observe(document.querySelector('div.loading-inner'), config);
 //addLink();
