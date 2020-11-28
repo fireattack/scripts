@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer
 // @namespace    http://tampermonkey.net/
-// @version      5.4
+// @version      5.5
 // @author       ぬ / fireattack
 // @match        http://*.5ch.net/*
 // @match        https://*.5ch.net/*
@@ -42,6 +42,10 @@ GM_addStyle(`
 `
 );
 
+function htmlDecode(input) {
+  var doc = new DOMParser().parseFromString(input, "text/html");
+  return doc.documentElement.textContent;
+}
 
 function scroll(readId) {
   if (!readId) return;
@@ -59,16 +63,19 @@ function foldPosts(readId) {
     $('.meta > span.name a', this).removeAttr("href");
 
     let id = Number($(this).attr('id'));
+    // Unescape HTML entities
+    $('.message > span', this).contents().filter(function () {
+      return this.nodeType === 3; //Node.TEXT_NODE
+    }).each(function () {
+      this.textContent = htmlDecode(this.textContent);
+    })
     let text = $('.message', this).text();
     let filtered = blacklist.some(w => text.includes(w));
-    if (readId && id <= readId) {
-      $(this).addClass('folded'); // Fold without recording content
-    } else {
-      if (existingContent.includes(text) || filtered) {
-        $(this).addClass('folded');
-      } else {
-        existingContent.push(text);
-      }
+    if ((readId && id <= readId) || existingContent.includes(text) || filtered) {
+      $(this).addClass('folded');
+    }
+    else {
+      existingContent.push(text);
     }
   });
   if (readId) label.innerHTML = `Your last progress is: <b>${readId}</b>`;
@@ -145,8 +152,8 @@ if (window.location.href.includes('read.cgi')) {
   `)
   let lastThreadID = Number(readTitle.match(/\d+/)[0]);
   $('body > div.HEADER_AREA > h3').append(`<span>&nbsp;&nbsp;&nbsp;&nbsp; Last read: <a href="${readURL}">${readTitle} (${readId})</a></span>`)
-  $('body > div.THREAD_MENU > div > p').each(function(){
-    if ($(this).text().includes('箱崎星梨花')){
+  $('body > div.THREAD_MENU > div > p').each(function () {
+    if ($(this).text().includes('箱崎星梨花')) {
       let newTitle = $(this).text().replace(/\d+:\s+(.+)$/, '$1');
       let newThreadID = newTitle.match(/\d+/)[0];
       let newURL = $('a', this)[0].href.replace(/l50$/, '');
