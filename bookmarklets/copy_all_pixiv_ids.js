@@ -1,4 +1,4 @@
-const copyToClipboard = str => {
+var copyToClipboard = str => {
     const el = document.createElement('textarea');
     el.value = str;
     document.body.appendChild(el);
