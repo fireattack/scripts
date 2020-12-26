@@ -1,6 +1,25 @@
-downloaded = [];
-book = SpeedBinb.getInstance('content');
-total_Page = book.Gt.Ki.length;
+// Test pages
+// https://booklive.jp/bviewer/s/?cid=887476_001
+// https://static.ichijinsha.co.jp/www/special/mbns/020.5/ 
+
+var downloaded = [];
+var book = SpeedBinb.getInstance('content');
+var total_Page = book.Gt.Ki.length;
+
+// Detect start page: sometimes it's 1 sometimes it's 0
+var startsWithOne = false;
+var startPage = 0;
+if (!document.querySelector('#content-p0')) {
+    console.log('Warning: page starts with 1.')       
+    startPage = 1;
+    startsWithOne = true;
+}
+
+function moveTo(pageNo) {
+    // Note: Page's internal ID for `moveTo` is always zero-indexed even if pageNo starts with 1.
+    if (startsWithOne) pageNo = pageNo - 1;
+    book.moveTo(pageNo, 0);
+}
 
 function downloadPage(pageNo) {
     console.log(`Downloading ${pageNo}...`);
@@ -50,7 +69,7 @@ function loaded(pageNo) {
     return !!(document.querySelector(`#content-p${pageNo} > div > div > img`))
 }
 
-function downloadPages(startPage, startsWithOne) {
+function downloadPages(startPage) {
     for (var i = startPage; loaded(i); ++i) {
         downloadPage(i);
     }
@@ -58,28 +77,11 @@ function downloadPages(startPage, startsWithOne) {
         console.log('Finish!')
         return;
     }
-    if (startsWithOne) book.moveTo(i-1, 0); else book.moveTo(i, 0); // Note: Page's internal ID for `moveTo` is zero-indexed even if pageNo starts with 1.
+    moveTo(i);
     setTimeout(() => {
         console.log('Load more pages..');
         downloadPages(i);
     }, 3000);
 }
 
-function main() {
-    // Detect start page: sometimes it's 1 sometimes it's 0
-    let startsWithOne = false;
-    let startPage = 0;
-    if (!document.querySelector('#content-p0')) {
-        console.log('Warning: page starts with 1.')
-        if (!document.querySelector('#content-p1'))
-        {
-            console.error('Cannot find start page!')
-            return;
-        }
-        startPage = 1;
-        startsWithOne = true;
-    }
-    // book.moveTo(0, 0); // moveTo(pageNo, animationEffectNo)
-    downloadPages(startPage, startsWithOne);
-}
-main();
+downloadPages(startPage, startsWithOne);
