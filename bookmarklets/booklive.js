@@ -1,3 +1,7 @@
+downloaded = [];
+book = SpeedBinb.getInstance('content');
+total_Page = book.Gt.Ki.length;
+
 function downloadPage(pageNo) {
     console.log(`Downloading ${pageNo}...`);
     let imgs = document.querySelectorAll(`#content-p${pageNo} > div > div > img`);
@@ -34,6 +38,7 @@ function downloadPage(pageNo) {
     ctx.drawImage(imgs[1], 0, Y1);
     ctx.drawImage(imgs[2], 0, Y2);
     c.toBlob((blob) => {
+        downloaded.push(pageNo);
         let a = document.createElement('a');
         a.download = `${pageNo}.png`;
         a.href = URL.createObjectURL(blob);
@@ -45,19 +50,36 @@ function loaded(pageNo) {
     return !!(document.querySelector(`#content-p${pageNo} > div > div > img`))
 }
 
-book = SpeedBinb.getInstance('content');
-total_Page = book.Gt.Ki.length;
-
-function downloadPages(startPage) {
+function downloadPages(startPage, startsWithOne) {
     for (var i = startPage; loaded(i); ++i) {
         downloadPage(i);
     }
-    if (i > total_Page)
+    if (downloaded.length === total_Page) {
+        console.log('Finish!')
         return;
-    book.moveTo(i - 1, 0); // Page's internal ID is zero-indexed.
+    }
+    if (startsWithOne) book.moveTo(i-1, 0); else book.moveTo(i, 0); // Note: Page's internal ID for `moveTo` is zero-indexed even if pageNo starts with 1.
     setTimeout(() => {
+        console.log('Load more pages..');
         downloadPages(i);
     }, 3000);
 }
 
-downloadPages(1);
+function main() {
+    // Detect start page: sometimes it's 1 sometimes it's 0
+    let startsWithOne = false;
+    let startPage = 0;
+    if (!document.querySelector('#content-p0')) {
+        console.log('Warning: page starts with 1.')
+        if (!document.querySelector('#content-p1'))
+        {
+            console.error('Cannot find start page!')
+            return;
+        }
+        startPage = 1;
+        startsWithOne = true;
+    }
+    // book.moveTo(0, 0); // moveTo(pageNo, animationEffectNo)
+    downloadPages(startPage, startsWithOne);
+}
+main();
