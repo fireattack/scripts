@@ -10,7 +10,7 @@ var totalPage = book.Xt.In.length;
 var startsWithOne = false;
 var firstPage = 0;
 if (!document.querySelector('#content-p0')) {
-    console.log('Warning: page starts with 1.')       
+    console.log('Warning: page starts with 1.')
     firstPage = 1;
     startsWithOne = true;
 }
@@ -20,7 +20,7 @@ console.log(`First page: ${firstPage}; last page ${lastPage};  total page: ${tot
 
 function moveTo(pageNo) {
     // Note: Page's internal ID for `moveTo` is always zero-indexed even if pageNo starts with 1.
-    console.log(`Move to ${pageNo}...`)    
+    console.log(`Move to ${pageNo}...`)
     if (startsWithOne) pageNo = pageNo - 1;
     book.moveTo(pageNo, 0);
 }
@@ -53,7 +53,7 @@ function downloadPage(pageNo) {
     let y2 = Number(imgs[2].parentElement.style.cssText.match(/inset: ([0-9.]+)%/)[1]) / 100;
     let Y1 = Math.round(y1 * W0 / w0 * h0);
     let Y2 = Math.round(y2 * W0 / w0 * h0);
-    
+
     let c = document.createElement('canvas');
     c.width = W0;
     c.height = Y2 + imgs[2].naturalHeight;
@@ -62,20 +62,26 @@ function downloadPage(pageNo) {
     ctx.drawImage(imgs[1], 0, Y1);
     ctx.drawImage(imgs[2], 0, Y2);
     try {
-    c.toBlob((blob) => {
-        downloaded.push(pageNo);
-        let a = document.createElement('a');
-        a.download = `${pageNo}.png`;
-        a.href = URL.createObjectURL(blob);
-        a.click();
-    });
+        c.toBlob((blob) => {
+            downloaded.push(pageNo);
+            let a = document.createElement('a');
+            a.download = `${pageNo}.png`;
+            a.href = URL.createObjectURL(blob);
+            a.click();
+        });
     } catch (e) {
         console.error(`Download page ${pageNo} failed. Please try it again manually!`)
     }
 }
 
 function loaded(pageNo) {
-    return !!(document.querySelector(`#content-p${pageNo} > div > div > img`))
+    if (!document.querySelector(`#content-p${pageNo} > div > div > img`)) return false;
+    let imgs = document.querySelectorAll(`#content-p${pageNo} > div > div > img`);
+    for (let i = 0; i < imgs.length; ++i) {
+        if (imgs[i].complete && imgs[i].naturalHeight !== 0) continue;
+        else return false;
+    }
+    return true;
 }
 
 function downloadPages(startPage) {
