@@ -78,8 +78,8 @@ function loaded(pageNo) {
     if (!document.querySelector(`#content-p${pageNo} > div > div > img`)) return false;
     let imgs = document.querySelectorAll(`#content-p${pageNo} > div > div > img`);
     for (let i = 0; i < imgs.length; ++i) {
-        if (imgs[i].complete && imgs[i].naturalHeight !== 0) continue;
-        else return false;
+        if (!imgs[i].complete) return false;
+        if (imgs[i].naturalHeight === 0) return false;        
     }
     return true;
 }
