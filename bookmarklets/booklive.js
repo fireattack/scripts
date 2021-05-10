@@ -15,7 +15,7 @@ if (!document.querySelector('#content-p0')) {
     startsWithOne = true;
 }
 
-var lastPage = totalPage + 1 - Number(startsWithOne);
+var lastPage = totalPage - 1 + Number(startsWithOne);
 console.log(`First page: ${firstPage}; last page ${lastPage};  total page: ${totalPage}`);
 
 function moveTo(pageNo) {
