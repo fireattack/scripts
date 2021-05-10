@@ -4,7 +4,7 @@
 
 var downloaded = [];
 var book = SpeedBinb.getInstance('content');
-var total_Page = book.Gt.Ki.length;
+var totalPage = book.Xt.In.length;
 
 // Detect start page: sometimes it's 1 sometimes it's 0
 var startsWithOne = false;
@@ -17,14 +17,13 @@ if (!document.querySelector('#content-p0')) {
 
 function moveTo(pageNo) {
     // Note: Page's internal ID for `moveTo` is always zero-indexed even if pageNo starts with 1.
+    // console.log(`Move to ${pageNo}...`)    
     if (startsWithOne) pageNo = pageNo - 1;
     book.moveTo(pageNo, 0);
 }
 
 function downloadPage(pageNo) {
     console.log(`Downloading ${pageNo}...`);
-    let imgs = document.querySelectorAll(`#content-p${pageNo} > div > div > img`);
-
     /* 
     The decoded images are loaded into three <img>s and then attached to each other vertically.
     But you can't directly merge them together, as there are overlaps between 1/2 and 2/3. 
@@ -43,15 +42,18 @@ function downloadPage(pageNo) {
 
     For part 3 we just keep the whole height of <img>, since nothing is overlapping on it.
     */
-    let y1 = imgs[1].parentElement.style.cssText.match(/translate\([[0-9.]+px, *([0-9.]+)px\);$/)[1];
-    let y2 = imgs[2].parentElement.style.cssText.match(/translate\([[0-9.]+px, *([0-9.]+)px\);$/)[1];
-    let w0 = imgs[0].parentElement.style.width.replace('px', ''); //w should be all the same.
-    let Y1 = Math.round(y1 / w0 * imgs[0].width);
-    let Y2 = Math.round(y2 / w0 * imgs[0].width);
-
+    let imgs = document.querySelectorAll(`#content-p${pageNo} > div > div > img`);
+    let h0 = imgs[0].parentElement.parentElement.offsetHeight;
+    let w0 = imgs[0].parentElement.parentElement.offsetWidth;
+    let W0 = imgs[0].naturalWidth;
+    let y1 = Number(imgs[1].parentElement.style.cssText.match(/inset: ([0-9.]+)%/)[1]) / 100;
+    let y2 = Number(imgs[2].parentElement.style.cssText.match(/inset: ([0-9.]+)%/)[1]) / 100;
+    let Y1 = Math.round(y1 * W0 / w0 * h0);
+    let Y2 = Math.round(y2 * W0 / w0 * h0);
+    
     let c = document.createElement('canvas');
-    c.width = imgs[0].width;
-    c.height = Y2 + imgs[2].height;
+    c.width = W0;
+    c.height = Y2 + imgs[2].naturalHeight;
     let ctx = c.getContext("2d");
     ctx.drawImage(imgs[0], 0, 0);
     ctx.drawImage(imgs[1], 0, Y1);
@@ -73,11 +75,11 @@ function downloadPages(startPage) {
     for (var i = startPage; loaded(i); ++i) {
         downloadPage(i);
     }
-    if (downloaded.length === total_Page) {
+    if (downloaded.length === totalPage) {
         console.log('Finish!')
         return;
     }
-    moveTo(i);
+    if (i < totalPage) moveTo(i);
     setTimeout(() => {
         console.log('Load more pages..');
         downloadPages(i);
