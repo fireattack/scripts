@@ -8,16 +8,19 @@ var totalPage = book.Xt.In.length;
 
 // Detect start page: sometimes it's 1 sometimes it's 0
 var startsWithOne = false;
-var startPage = 0;
+var firstPage = 0;
 if (!document.querySelector('#content-p0')) {
     console.log('Warning: page starts with 1.')       
-    startPage = 1;
+    firstPage = 1;
     startsWithOne = true;
 }
 
+var lastPage = totalPage + 1 - Number(startsWithOne);
+console.log(`First page: ${firstPage}; last page ${lastPage};  total page: ${totalPage}`);
+
 function moveTo(pageNo) {
     // Note: Page's internal ID for `moveTo` is always zero-indexed even if pageNo starts with 1.
-    // console.log(`Move to ${pageNo}...`)    
+    console.log(`Move to ${pageNo}...`)    
     if (startsWithOne) pageNo = pageNo - 1;
     book.moveTo(pageNo, 0);
 }
@@ -58,6 +61,7 @@ function downloadPage(pageNo) {
     ctx.drawImage(imgs[0], 0, 0);
     ctx.drawImage(imgs[1], 0, Y1);
     ctx.drawImage(imgs[2], 0, Y2);
+    try {
     c.toBlob((blob) => {
         downloaded.push(pageNo);
         let a = document.createElement('a');
@@ -65,6 +69,9 @@ function downloadPage(pageNo) {
         a.href = URL.createObjectURL(blob);
         a.click();
     });
+    } catch (e) {
+        console.error(`Download page ${pageNo} failed. Please try it again manually!`)
+    }
 }
 
 function loaded(pageNo) {
@@ -72,18 +79,19 @@ function loaded(pageNo) {
 }
 
 function downloadPages(startPage) {
+    downloaded = [];
     for (var i = startPage; loaded(i); ++i) {
         downloadPage(i);
     }
-    if (downloaded.length === totalPage) {
+    if (downloaded.length === lastPage - startPage + 1) {
         console.log('Finish!')
         return;
     }
-    if (i < totalPage) moveTo(i);
+    if (i <= lastPage) moveTo(i);
     setTimeout(() => {
         console.log('Load more pages..');
         downloadPages(i);
     }, 3000);
 }
 
-downloadPages(startPage, startsWithOne);
+downloadPages(firstPage);
