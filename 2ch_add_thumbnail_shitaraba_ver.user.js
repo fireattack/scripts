@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer for shitaraba
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.3
 // @author       fireattack
 // @match        https://jbbs.shitaraba.net/*
 // @grant        GM_addStyle
@@ -10,37 +10,6 @@
 // ==/UserScript==
 
 // Target: https://jbbs.shitaraba.net/anime/11093/
-
-GM_addStyle(`
-#mydiv {
-    position: fixed;
-    right: 500px;
-    top: 100px;
-    font-size: 12pt;
-    padding: 10px;
-    background-color: #d6d1d1;
-}
-
-#mylabel {
-    padding: 5px;
-    margin: 0 0 5px;
-    display: block;
-}
-
-dl#thread-body table {
-  display: none !important;
-}
-
-dl#thread-body dt.folded {
-  padding: 0px !important;
-}
-
-dl#thread-body dd.folded {
-  padding: 0px !important;
-  display: none !important;
-}
-`
-);
 
 function htmlDecode(input) {
   var doc = new DOMParser().parseFromString(input, "text/html");
@@ -64,10 +33,10 @@ function foldPosts(readId) {
 
     let id = Number(this.id.match(/\d+/)[0]);
     let text = $('.message', this).text();
-    if ((readId && id <= readId) ) {
+    if ((readId && id <= readId)) {
       $(this).addClass('folded');
-      $(this).next().addClass('folded');      
-    }    
+      $(this).next().addClass('folded');
+    }
   });
   if (readId) label.innerHTML = `Your last progress is: <b>${readId}</b>`;
 }
@@ -75,7 +44,7 @@ function foldPosts(readId) {
 function setReadProgress() {
   let oldId = Number(localStorage.getItem('readId'));
   let oldURL = localStorage.getItem('readURL');
-  let newestId = Number($('dl#thread-body dt').last().attr('id').match(/\d+/)[0]);
+  let newestId = Number($('dl#thread-body > dt').last().attr('id').match(/\d+/)[0]);
   let url = window.location.href;
   if (!oldURL || url !== oldURL || !oldId || newestId > oldId) {
     localStorage.setItem('readId', newestId);
@@ -106,6 +75,40 @@ var readId = Number(localStorage.getItem('readId'));
 var readTitle = localStorage.getItem('readTitle');
 
 if (window.location.href.includes('read.cgi')) {
+  GM_addStyle(`
+#mydiv {
+    position: fixed;
+    right: 500px;
+    top: 100px;
+    font-size: 12pt;
+    padding: 10px;
+    background-color: #d6d1d1;
+}
+
+#mylabel {
+    padding: 5px;
+    margin: 0 0 5px;
+    display: block;
+}
+
+dl#thread-body table {
+  display: none !important;
+}
+
+dl#thread-body dt.folded {
+  padding: 0px !important;
+}
+
+dl#thread-body dd.folded {
+  padding: 0px !important;
+  display: none !important;
+}
+body > table:nth-child(11) {
+  display: none !important;
+}
+`
+  );
+
   var myDiv = document.createElement('div');
   myDiv.id = 'mydiv';
   document.body.appendChild(myDiv);
@@ -137,24 +140,38 @@ if (window.location.href.includes('read.cgi')) {
   //history.scrollRestoration = "manual"; // Use this if you don't want browser to retain the scr. pos.
 } else if (window.location.href.includes('anime/11093')) {
   GM_addStyle(`
-  div#ads_fieldOuter {
-    display: none;
-  }
-#contents_box > div.localrule.menu_box > div.content_mainWrapper > div > div > div {
-  font-size: 18px;
-}
-  `)
-  let lastThreadID = Number(readTitle.match(/\d+/)[0]);
-  $('#contents_box > div.localrule.menu_box > div.content_mainWrapper > div > div > div')
-    .append(`<span>&nbsp;&nbsp;&nbsp;&nbsp; Last read: <a href="${readURL}">${readTitle.split(' - ')[0]} (${readId})</a></span>`)
-  $('#thread_listOuter > div.menu_box.thread_list.new > div.content_mainWrapper a').each(function () {
-    if ($(this).next().text().includes('箱崎星梨花')) {
-      let newTitle = $(this).next().text().replace(/(\d+)\((\d+)\)$/, '$1 ($2)');
-      let newThreadID = newTitle.match(/\d+/)[0];
-      let newURL = this.href.replace(/l50$/, '');
-      if (newThreadID >= lastThreadID)
-        $('#contents_box > div.localrule.menu_box > div.content_mainWrapper > div > div > div').append(`<span>&nbsp;&nbsp;&nbsp;&nbsp; New thread: <a href="${newURL}">${newTitle}</a></span>`)
-      return false;
+    div#ads_fieldOuter {
+      display: none;
     }
-  })
+    body > div > table > tbody > tr > td > center {
+      display: none;
+    }
+    #contents_box > div.localrule.menu_box > div.content_mainWrapper > div > div > div {
+      font-size: 18px;
+    }
+      `)
+  let lastThreadID = Number(readTitle.match(/\d+/)[0]);
+  let spaces = [
+    '#contents_box > div.localrule.menu_box > div.content_mainWrapper > div > div > div',
+    'body > div > table:nth-child(3) > tbody > tr > td'
+  ];
+  spaces.forEach(sel => {
+
+    $(sel).append(`<span>&nbsp;&nbsp;&nbsp;&nbsp; Last read: <a href="${readURL}">${readTitle.split(' - ')[0]} (${readId})</a></span>`);
+  });
+
+  let tl = ['#thread_listOuter > div.menu_box.thread_list.new > div.content_mainWrapper a',
+    'body > table > tbody > tr > td > font > a'];
+  tl.forEach(sel => {
+    $(sel).each(function () {
+      if ($(this).next().text().includes('箱崎星梨花')) {
+        let newTitle = $(this).next().text().replace(/(\d+)\((\d+)\)$/, '$1 ($2)');
+        let newThreadID = newTitle.match(/\d+/)[0];
+        let newURL = this.href.replace(/l50$/, '');
+        if (newThreadID >= lastThreadID)
+          spaces.forEach(sel => { $(sel).append(`<span>&nbsp;&nbsp;&nbsp;&nbsp; New thread: <a href="${newURL}">${newTitle}</a></span>`) });
+        return false;
+      }
+    })
+  });
 }
