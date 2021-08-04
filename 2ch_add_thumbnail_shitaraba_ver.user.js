@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer for shitaraba
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @author       fireattack
 // @match        https://jbbs.shitaraba.net/*
 // @grant        GM_addStyle
@@ -46,6 +46,8 @@ function setReadProgress() {
   let oldURL = localStorage.getItem('readURL');
   let newestId = Number($('dl#thread-body > dt').last().attr('id').match(/\d+/)[0]);
   let url = window.location.href;
+  url = url.replace(/(read.cgi\/.+?\/\d+\/\d+\/).+?$/, '$1'); // remove things like /10 or /500-n
+
   if (!oldURL || url !== oldURL || !oldId || newestId > oldId) {
     localStorage.setItem('readId', newestId);
     localStorage.setItem('readURL', url);
@@ -74,7 +76,7 @@ var readURL = localStorage.getItem('readURL');
 var readId = Number(localStorage.getItem('readId'));
 var readTitle = localStorage.getItem('readTitle');
 
-if (window.location.href.includes('read.cgi')) {
+if (window.location.href.includes('read.cgi')) { // for the single thread page
   GM_addStyle(`
 #mydiv {
     position: fixed;
@@ -127,9 +129,11 @@ body > table:nth-child(11) {
   if (bl = localStorage.getItem('blacklist')) {
     var blacklist = bl.split(';');
   }
-  if (window.location.href !== readURL) readId = 0; //If not the same post, doesn't count.
+  let url = window.location.href;
+  url = url.replace(/(read.cgi\/.+?\/\d+\/\d+\/).+?$/, '$1');
+  if (url !== readURL) readId = 0; //If not the same post, doesn't count.
   foldPosts(readId); //Fold both read posts and duplicates
-  if (window.location.href === readURL) { //Scroll to last read
+  if (url === readURL) { //Scroll to last read
     scroll(readId);
     $('button#btGoTop').click(function (e) { //Override top button as well
       scroll(readId);
@@ -138,7 +142,7 @@ body > table:nth-child(11) {
   }
   addThumb();
   //history.scrollRestoration = "manual"; // Use this if you don't want browser to retain the scr. pos.
-} else if (window.location.href.includes('anime/11093')) {
+} else if (window.location.href.includes('anime/11093')) { // for the thread list page
   GM_addStyle(`
     div#ads_fieldOuter {
       display: none;
