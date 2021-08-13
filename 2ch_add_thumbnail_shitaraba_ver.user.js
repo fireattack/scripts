@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2ch (5ch) enhancer for shitaraba
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @author       fireattack
 // @match        https://jbbs.shitaraba.net/*
 // @grant        GM_addStyle
@@ -172,9 +172,10 @@ body > table:nth-child(11) {
         let newTitle = $(this).next().text().replace(/(\d+)\((\d+)\)$/, '$1 ($2)');
         let newThreadID = newTitle.match(/\d+/)[0];
         let newURL = this.href.replace(/l50$/, '');
-        if (newThreadID >= lastThreadID)
+        if (newThreadID >= lastThreadID) {
           spaces.forEach(sel => { $(sel).append(`<span>&nbsp;&nbsp;&nbsp;&nbsp; New thread: <a href="${newURL}">${newTitle}</a></span>`) });
-        return false;
+          return false;
+        }
       }
     })
   });
