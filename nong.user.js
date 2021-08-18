@@ -34,7 +34,7 @@
 // @include     http*://115.com/?tab=offline&mode=wangpan
 // @include     http*://www.furk.net/users/files/add
 
-// @version     1.51
+// @version     1.6
 // @run-at      document-end
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -43,6 +43,9 @@
 // @grant       GM_addStyle
 // @grant       GM_registerMenuCommand
 // ==/UserScript==
+
+// Original: https://greasyfork.org/zh-CN/scripts/8392-%E6%8C%8A and https://github.com/harytfw/nong
+// Modified by fireattack
 
 var main = {
   //av信息查询 类
@@ -624,9 +627,11 @@ var my_search = {
                         data.push({
                             "title": elem.querySelector("td:nth-child(2)>a:nth-child(1)").title,
                             "mag": "",
-                            "torrent_url": "https://nyaa.si" + elem.querySelector("td:nth-child(3)>a:nth-child(1)").href,
+                            "torrent_url": "https://nyaa.si" + elem.querySelector("td:nth-child(3)>a:nth-child(1)").getAttribute('href'),
                             "size": elem.querySelector("td:nth-child(4)").textContent,
-                            "src": "https://nyaa.si" + elem.querySelector("td:nth-child(2)>a:nth-child(1)").href,
+                            "src": "https://sukebei.nyaa.si" + elem.querySelector("td:nth-child(2)>a:nth-child(1)").getAttribute('href'),
+                            // "seeder": elem.querySelector("td:nth-child(6)").textContent,
+                            // "finished": elem.querySelector("td:nth-child(8)").textContent
                         });
                     }
                 }
@@ -637,6 +642,8 @@ var my_search = {
                         "torrent_url": "",
                         "size": "0",
                         "src": result.finalUrl,
+                        "seeder": "",
+                        "finished": ""
                     });
                 }
 
