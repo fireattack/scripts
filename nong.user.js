@@ -31,7 +31,7 @@
 // @include     http*://115.com/?tab=offline&mode=wangpan
 // @include     http*://www.furk.net/users/files/add
 
-// @version     1.7
+// @version     1.8
 // @run-at      document-end
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -308,14 +308,15 @@ var magnet_table = {
       a.id = "nong-head";
       var head_str = [
         "大小",
+        "做种",
+        "完成",
         "操作",
         "离线下载"
       ];
-      var th_list = [document.createElement("th"), document.createElement("th"), document.createElement("th"), document.createElement("th")];
+      var th_list = Array(head_str.length + 1).fill(null).map(()=>document.createElement("th"));
 
       var select_box = document.createElement("select");
       var option_str = my_search.search_name_string;
-      //console.log("get", GM_getValue("search_index"));
       var index = GM_getValue("search_index", 0);
       var op_value = 0;
       option_str.forEach(function (str) {
@@ -350,11 +351,10 @@ var magnet_table = {
       th_list[1].lastChild.setAttribute("target", "_blank");
       th_list[1].lastChild.textContent = head_str[0];
 
-      th_list[2].appendChild(document.createElement("a"));
-      th_list[2].lastChild.textContent = head_str[1];
-
-      th_list[3].appendChild(document.createElement("a"));
-      th_list[3].lastChild.textContent = head_str[2];
+      for (var i = 2; i < th_list.length; i++) {
+        th_list[i].appendChild(document.createElement("a"));
+        th_list[i].lastChild.textContent = head_str[i - 1];
+      }
 
       th_list.forEach(function (th) {
         a.appendChild(th);
@@ -400,6 +400,14 @@ var magnet_table = {
         (function (size, src, self) {
           return self.create_size(size, src);
         })(data.size, data.src, this),
+
+        (function (size, src, self) {
+          return self.create_size(size, src);
+        })(data.seeder, data.src, this),
+
+        (function (size, src, self) {
+          return self.create_size(size, src);
+        })(data.finished, data.src, this),
 
         (function (torrent_url, self) {
           var operate = self.create_operation(torrent_url);
@@ -556,8 +564,8 @@ var my_search = {
                             "torrent_url": "https://nyaa.si" + elem.querySelector("td:nth-child(3)>a:nth-child(1)").getAttribute('href'),
                             "size": elem.querySelector("td:nth-child(4)").textContent,
                             "src": "https://sukebei.nyaa.si" + elem.querySelector("td:nth-child(2)>a:nth-child(1)").getAttribute('href'),
-                            // "seeder": elem.querySelector("td:nth-child(6)").textContent,
-                            // "finished": elem.querySelector("td:nth-child(8)").textContent
+                            "seeder": elem.querySelector("td:nth-child(6)").textContent,
+                            "finished": elem.querySelector("td:nth-child(8)").textContent
                         });
                     }
                 }
