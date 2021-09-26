@@ -31,7 +31,7 @@
 // @include     http*://115.com/?tab=offline&mode=wangpan
 // @include     http*://www.furk.net/users/files/add
 
-// @version     2.02
+// @version     2.03
 // @run-at      document-end
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -561,7 +561,7 @@ var my_search = {
                         data.push({
                             "title": elem.querySelector("td:nth-child(2)>a:nth-child(1)").title,
                             "mag": "",
-                            "torrent_url": "https://nyaa.si" + elem.querySelector("td:nth-child(3)>a:nth-child(1)").getAttribute('href'),
+                            "torrent_url": "https://sukebei.nyaa.si" + elem.querySelector("td:nth-child(3)>a:nth-child(1)").getAttribute('href'),
                             "size": elem.querySelector("td:nth-child(4)").textContent,
                             "src": "https://sukebei.nyaa.si" + elem.querySelector("td:nth-child(2)>a:nth-child(1)").getAttribute('href'),
                             "seeder": elem.querySelector("td:nth-child(6)").textContent,
