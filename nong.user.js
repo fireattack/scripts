@@ -31,7 +31,7 @@
 // @include     http*://115.com/?tab=offline&mode=wangpan
 // @include     http*://www.furk.net/users/files/add
 
-// @version     2.0
+// @version     2.01
 // @run-at      document-end
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -303,7 +303,7 @@ var common = {
 var magnet_table = {
   template: {
     create_head: function (src) {
-      var a = document.createElement("tr");
+      var a = document.createElement("tr.default,tr.success");
       a.className = "nong-row";
       a.id = "nong-head";
       var head_str = [
