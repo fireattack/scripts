@@ -31,7 +31,7 @@
 // @include     http*://115.com/?tab=offline&mode=wangpan
 // @include     http*://www.furk.net/users/files/add
 
-// @version     1.8
+// @version     2.0
 // @run-at      document-end
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -555,7 +555,7 @@ var my_search = {
             onload: function (result) {
                 let doc = common.parsetext(result.responseText);
                 let data = [];
-                let t = doc.querySelectorAll("tr.default");
+                let t = doc.querySelectorAll("tr");
                 if (t.length!==0) {
                     for (let elem of t) {
                         data.push({
