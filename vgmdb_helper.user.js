@@ -42,5 +42,5 @@
     //     }
     //     catch (err) { }
     // });
-    // notes.innerHTML = html;
+    notes.innerHTML = html;
 })();
