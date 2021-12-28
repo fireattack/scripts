@@ -1,10 +1,24 @@
 // Test pages
 // https://booklive.jp/bviewer/s/?cid=887476_001
 // https://static.ichijinsha.co.jp/www/special/mbns/020.5/ 
+// https://static.ichijinsha.co.jp/www/special/mbns/ym1geld3zv7gr9dv/
 
 var downloaded = [];
 var book = SpeedBinb.getInstance('content');
-var totalPage = book.Xt.In.length;
+
+// find the correct object to find the totalPage
+function getTotalPage(book) {
+    for (val of Object.values(book)) {
+        if (val && typeof val === 'object' && 'content' in val) {
+            for (v of Object.values(val)) {
+                if (Array.isArray(v) && v.length > 0) {
+                    return v.length;
+                }
+            };
+        };
+    };
+}
+var totalPage = getTotalPage(book);
 
 // Detect start page: sometimes it's 1 sometimes it's 0
 var startsWithOne = false;
@@ -79,7 +93,7 @@ function loaded(pageNo) {
     let imgs = document.querySelectorAll(`#content-p${pageNo} > div > div > img`);
     for (let i = 0; i < imgs.length; ++i) {
         if (!imgs[i].complete) return false;
-        if (imgs[i].naturalHeight === 0) return false;        
+        if (imgs[i].naturalHeight === 0) return false;
     }
     return true;
 }
