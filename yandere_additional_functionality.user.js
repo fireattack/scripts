@@ -3,7 +3,7 @@
 // @namespace     org.fireattack.yandere
 // @description
 // @match         *://yande.re/*
-// @version       4.2
+// @version       4.4
 // ==/UserScript==
 
 
@@ -259,6 +259,17 @@ if (/post$|post\?|post\/$|pool\/show/i.test(window.location.href)) {
             directLink.lastChild.textContent = `${width} x ${height}`;
         }
     });
+}
+
+if (window.location.href === 'https://yande.re/post/moderate') {
+    document.querySelectorAll('#content > div:nth-child(4) > form > table > tbody > tr > td.checkbox-cell').forEach(td => {
+        text = td.textContent;
+        let uploader =  text.match(/Uploaded by (.+?) /)[1];
+        let flagger = text.match(/Reason: .+ \((.+?)\)/)[1];
+        if (uploader === flagger) {
+            td.style.border = '5px solid yellow';
+        }
+    });  
 }
 
 // Pool index modification
