@@ -13,7 +13,7 @@
 
 // modified from https://openuserjs.org/scripts/btown/VGMdb_Liner_Note_Helper as the author no longer updates it
 
-const DEBUGGING = true;
+const DEBUGGING = false;
 
 function restoreConsole() {
     var i = document.createElement('iframe');
@@ -25,10 +25,9 @@ function restoreConsole() {
 function escapeRegExp(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
-restoreConsole();
+if (DEBUGGING) restoreConsole();
 var notes = document.getElementById('notes');
 var html = notes.innerHTML;
-
 
 var toBeReplaced = [];
 var links = document.querySelectorAll('a[href^="/artist/"]');
@@ -47,7 +46,7 @@ var links = document.querySelectorAll('a[href^="/artist/"]');
     catch (err) { }
 });
 
-// replace with placeholder so links won't be broken 
+// replace to intermediate placeholders firstly, so links won't be broken 
 for (idx in toBeReplaced) {
     DEBUGGING && console.log(re, repl);
     var {re, repl} = toBeReplaced[idx];
