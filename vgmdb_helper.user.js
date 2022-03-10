@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             VGMdb Liner Note Helper
 // @namespace        http://tampermonkey.net/
-// @version          2.0
+// @version          2.1
 // @description      Within album notes in VGMdb, link to artists, and reference tracks by name
 // @author           fireattack
 // @original-author  btown
@@ -41,12 +41,12 @@ var links = document.querySelectorAll('a[href^="/artist/"]');
         toBeReplaced.push({
             re: re,
             repl: repl,
-        });   
+        });
     }
     catch (err) { }
 });
 
-// replace to intermediate placeholders firstly, so links won't be broken 
+// replace to intermediate placeholders firstly, so links won't be broken
 for (idx in toBeReplaced) {
     DEBUGGING && console.log(re, repl);
     var {re, repl} = toBeReplaced[idx];
@@ -62,7 +62,7 @@ for (idx in toBeReplaced) {
 
 // Feature: add track name to note.
 var toBeReplaced = [];
-var tracks = document.querySelectorAll('.tl tr.rolebit');
+var tracks = [...document.querySelectorAll('div#tracklist table.role')].pop().querySelectorAll('.tl tr.rolebit');
 [...tracks].map((track) => {
     try {
         var cols = track.children;
