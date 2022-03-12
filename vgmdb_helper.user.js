@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             VGMdb Liner Note Helper
 // @namespace        http://tampermonkey.net/
-// @version          2.1
+// @version          2.2
 // @description      Within album notes in VGMdb, link to artists, and reference tracks by name
 // @author           fireattack
 // @original-author  btown
@@ -62,7 +62,7 @@ for (idx in toBeReplaced) {
 
 // Feature: add track name to note.
 var toBeReplaced = [];
-var tracks = [...document.querySelectorAll('div#tracklist table.role')].pop().querySelectorAll('.tl tr.rolebit');
+var tracks = [...document.querySelectorAll('div#tracklist table.role:last-of-type .tl tr.rolebit')];
 [...tracks].map((track) => {
     try {
         var cols = track.children;
