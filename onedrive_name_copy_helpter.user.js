@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        OneDrive name copy helper
 // @namespace   https://twitter.com/ikenaikoto
-// @match       https://onedrive.live.com/
+// @match       https://onedrive.live.com/*
 // @version     1.1
 // @author      fireattack
 // @description Add a textarea to easily copy OD file and folder names
