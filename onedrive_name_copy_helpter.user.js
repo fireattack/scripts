@@ -2,7 +2,7 @@
 // @name        OneDrive name copy helper
 // @namespace   https://twitter.com/ikenaikoto
 // @match       https://onedrive.live.com/
-// @version     1.0
+// @version     1.1
 // @author      fireattack
 // @description Add a textarea to easily copy OD file and folder names
 // @grant       GM_addStyle
@@ -50,6 +50,7 @@ function getNodes() {
   let s = "";
   let bars = [];
   document.querySelectorAll('.BreadcrumbBar-item').forEach(e => { bars.push(e.textContent) });
+  document.querySelectorAll('.ms-Breadcrumb-listItem').forEach(e => { bars.push(e.querySelector('.ms-TooltipHost').innerText); });
   s += bars.join(' > ') + '\n';
   document.querySelectorAll('button').forEach(e => { if (e.getAttribute('data-automationid') === "FieldRenderer-name") s += e.textContent + '\n'; });
   document.querySelectorAll('a').forEach(e => { if (e.getAttribute('data-automationid') === "FieldRenderer-name") s += e.textContent + '\n'; });
