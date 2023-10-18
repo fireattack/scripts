@@ -1,6 +1,6 @@
 // Test pages
 // https://booklive.jp/bviewer/s/?cid=887476_001
-// https://static.ichijinsha.co.jp/www/special/mbns/020.5/ 
+// https://static.ichijinsha.co.jp/www/special/mbns/020.5/
 // https://static.ichijinsha.co.jp/www/special/mbns/ym1geld3zv7gr9dv/
 
 var downloaded = [];
@@ -36,25 +36,25 @@ function moveTo(pageNo) {
     // Note: Page's internal ID for `moveTo` is always zero-indexed even if pageNo starts with 1.
     console.log(`Move to ${pageNo}...`)
     if (startsWithOne) pageNo = pageNo - 1;
-    book.moveTo(pageNo, 0);
+    book.moveTo(pageNo, false); // page number, smooth_scroll
 }
 
 function downloadPage(pageNo) {
     console.log(`Downloading ${pageNo}...`);
-    /* 
+    /*
     The decoded images are loaded into three <img>s and then attached to each other vertically.
-    But you can't directly merge them together, as there are overlaps between 1/2 and 2/3. 
-    THe overlapping, or even the img size of three parts, are not the same or consistent within 
+    But you can't directly merge them together, as there are overlaps between 1/2 and 2/3.
+    THe overlapping, or even the img size of three parts, are not the same or consistent within
     the same book.
-    
-    However, the displayed y-coordinate, or offset, of part 2 (y1) reveals the actual 
-    visible height of part 1. we can get that height in original dimension (Y1) 
+
+    However, the displayed y-coordinate, or offset, of part 2 (y1) reveals the actual
+    visible height of part 1. we can get that height in original dimension (Y1)
     by scaling it back using the ratio between displayed width (w0) and original width of <img>.
 
     So, the part we want to keep for part 1 is from 0 to Y1 (the rest are overlapped by
-    part 2 so no need to keep). 
-    
-    For part 2, do the same. So we want to keep the height, from 0 to Y2 (the rest are overlapped by 
+    part 2 so no need to keep).
+
+    For part 2, do the same. So we want to keep the height, from 0 to Y2 (the rest are overlapped by
     part 3).
 
     For part 3 we just keep the whole height of <img>, since nothing is overlapping on it.
