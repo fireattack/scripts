@@ -7,9 +7,9 @@ var copyToClipboard = str => {
     document.body.removeChild(el);
 };
 var IDs = [];
-for (var a of document.querySelectorAll('section a')) {
+for (var a of document.querySelectorAll('li a')) {
     if (/artworks\/\d+/.test(a.href)) {
-        IDs.push(a.href.match(/artworks\/(\d+)/)[1]);        
+        IDs.push(a.href.match(/artworks\/(\d+)/)[1]);
     }
 }
 
